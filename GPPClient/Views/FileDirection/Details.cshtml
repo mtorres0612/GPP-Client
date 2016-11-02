@@ -1,0 +1,30 @@
+﻿@model GPPClientModel.FileDirection
+
+@{
+    ViewBag.Title = "File Direction Details";
+}
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FileDirectionCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileDirectionCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileDirectionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileDirectionName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FileDirectionCode }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,52 @@
+﻿@model GPPClientModel.ERP
+
+@{
+    ViewBag.Title = "SDS Environment Delete Confirmation";
+}
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Erp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Erp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SuppID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SuppID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ErpCountryLU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ErpCountryLU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

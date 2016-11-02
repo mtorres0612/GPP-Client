@@ -1,0 +1,64 @@
+﻿@model PagedList.IPagedList<GPPClientModel.ProcessLog>
+@using PagedList.Mvc;
+
+<table class="table">
+    <tr>
+        <th>
+            Message Code
+        </th>
+        <th>
+            Process Source
+        </th>
+        <th>
+            Technical Error
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Start Date
+        </th>
+        <th>
+            End Date
+        </th>
+    </tr>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MsgCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcessSource)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TechErrDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+        </tr>
+    }
+}
+
+</table>
+
+@Html.Hidden("CurrentFilter", ViewBag.currentFilter as GPPClientModel.ProcessLog)
+
+@if (Model != null)
+{
+    <span>Page</span> @(Model.PageCount < @Model.PageNumber ? 0 : @Model.PageNumber) <span>of</span> @Model.PageCount
+    
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.currentFilter}))
+}
+    
+

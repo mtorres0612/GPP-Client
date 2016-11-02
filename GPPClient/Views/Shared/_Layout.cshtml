@@ -1,0 +1,80 @@
+﻿z<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/tagitcss")
+
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <link href="~/Content/dashboard.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-timepicker.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">GPP Client</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <h2>Applications</h2>
+                <ul class="nav nav-sidebar ">
+                    <li><a href="#">Monitoring</a></li>
+                    <li><a href="/Maintenance">Maintenance</a></li>
+                    <li><a href="/SourceFileLog">Message Inquiry</a></li>
+                    <li><a href="/ProcessLog">Process Log</a></li>
+                    <li><a href="/TradingPartner">Trading Partners</a></li>
+                    <li><a href="/ERP">SDS Environment</a></li>
+                    <li><a href="/EmailDistributionList">Email Distribution List</a></li>
+                    <li><a href="/FileDirection">File Direction</a></li>
+                    <li><a href="/FileType">File Type</a></li>
+                    <li><a href="/Supplier">Supplier</a></li>
+                    <li><a href="/TransmissionType">Transmission Type</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div style="text-align:right;">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <strong>Hello, @Html.Encode(User.Identity.Name)</strong>
+                        @Html.ActionLink("Sign Out", "Logout", "User")
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Sign In", "Login", "User")
+                    }
+                </div>
+
+                <h2 class="page-header">@ViewBag.Title</h2>
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/tagitjs")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/Custom/Module.js"></script>
+    <script src="~/Scripts/Custom/EmailDistributionList.js"></script>
+    <script src="~/Scripts/bootstrap-timepicker.min.js"></script>
+    
+</body>
+</html>

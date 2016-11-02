@@ -1,0 +1,36 @@
+﻿@model IEnumerable<GPPClientModel.TransmissionType>
+
+@{
+    ViewBag.Title = "Transmission Type";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TransmissionTypeCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransmissionTypeDescription)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TransmissionTypeCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TransmissionTypeDescription)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.TransmissionTypeID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TransmissionTypeID })
+        </td>
+    </tr>
+}
+
+</table>

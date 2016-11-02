@@ -1,0 +1,65 @@
+﻿@model IEnumerable<GPPClientModel.MessageSettings>
+
+<style>
+    #tblMessageSettings tr td {
+        vertical-align: middle;
+    }
+</style>
+
+<p>
+    <button type="button"
+            id="btnAdd"
+            class="btn btn-link btn-md"
+            data-toggle="modal"
+            data-target="#dvMessageSettings"
+            href="@Html.Raw(Url.Action("CreateMessageSettings", "Maintenance", new { msgCode = ViewBag.msgCode }))">
+        New Message Setting
+    </button>
+</p>
+<table class="table" id="tblMessageSettings">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MsgCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ERP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PRNCPL)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MsgCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ERP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PRNCPL)
+        </td>
+        <td>
+            <button type="button"
+                    id="btnEdit"
+                    class="btn btn-link btn-sm"
+                    data-toggle="modal"
+                    data-target="#dvMessageSettings"
+                    href="@Html.Raw(Url.Action("EditMessageSettings", "Maintenance", new { msgCode = item.MsgCode }))">
+                Edit
+            </button> | 
+            <button type="button"
+                    id="btnEdit"
+                    class="btn btn-link btn-sm"
+                    data-toggle="modal"
+                    data-target="#dvMessageSettings"
+                    href="@Html.Raw(Url.Action("EditMessageSettings", "Maintenance", new { msgCode = item.MsgCode }))">
+                Delete
+            </button>
+        </td>
+    </tr>
+}
+
+</table>

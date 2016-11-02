@@ -1,0 +1,30 @@
+﻿@model GPPClientModel.FileType
+
+@{
+    ViewBag.Title = "File Type Details";
+}
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FileTypeCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileTypeCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileTypeName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FileTypeCode }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

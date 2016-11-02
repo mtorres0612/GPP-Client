@@ -1,0 +1,126 @@
+﻿@model GPPClientModel.EmailDistributionList
+
+@{
+    ViewBag.Title = "Email Distribution List Details";
+}
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Emldkey)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emldkey)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MsgCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MsgCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ERP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ERP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReportCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailSubject)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailSubject)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddrFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddrFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddrTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddrTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddrCC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddrCC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddrBCC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddrBCC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExtEmailAddrTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExtEmailAddrTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExtEmailAddrCC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExtEmailAddrCC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.XsltPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.XsltPath)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEmailDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEmailDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Emldkey }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

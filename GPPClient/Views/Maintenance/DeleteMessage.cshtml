@@ -1,0 +1,159 @@
+﻿@model GPPClientModel.Messages
+
+@{
+    Layout = null;
+}
+<style>
+    .modal-dialog {
+        width: 70%;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    fieldset {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #000;
+        width: 91%;
+    }
+
+    legend {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+        width: 14%;
+        font-size: 19px;
+    }
+
+    .label-padding {
+        margin-right: 10px;
+    }
+
+    .modal-label {
+        width: auto;
+        padding: 0;
+    }
+</style>
+@using (Ajax.BeginForm("DeleteMessage", "Maintenance", null, new AjaxOptions { HttpMethod = "post", OnSuccess = "GetResult" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Message Confirmation</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger" id="divValidationSummary">
+                    <strong>Error saving message.</strong> Details:
+                    <ul id="lstValidationSummary"></ul>
+                </div>
+
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MsgCode)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.MsgCode)
+                        @Html.HiddenFor(model => model.MsgCode)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TradingPartnercode)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TradingPartnercode)
+                        @Html.HiddenFor(model => model.TradingPartnercode)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ColuCode)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ColuCode)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FileType)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.FileType)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FileDirectionCode)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.FileDirectionCode)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ApplicationType)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ApplicationType)
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success btn-md" type="submit" id="btnDelete" name="Save" value="Delete message" />
+                <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function () {
+        $("#divValidationSummary").hide();
+    });
+
+    function GetResult(response) {
+        jsonResult = JSON.parse(response);
+        if (jsonResult.result == "ERROR")
+        {
+            $("#divValidationSummary").show();
+            $("#lstValidationSummary").html("");
+            for (var i = 0; i < jsonResult.errorlist.length; i++) {
+                $("#lstValidationSummary").append("<li>" + jsonResult.errorlist[i].ErrorMessage + "</li>");
+            }
+        }
+        else {
+            $('#dvMessage').modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+
+            $.ajax({
+                url: '@Url.Action("GetMessagesPerTradingPartner", "Maintenance", new { trdpCode = Model.TradingPartnercode })',
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#MessagesList').html(result);
+                }
+            });
+        }
+    };
+
+</script>
+
+

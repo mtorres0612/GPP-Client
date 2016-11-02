@@ -1,0 +1,50 @@
+﻿@model PagedList.IPagedList<GPPClientModel.ERP>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "SDS";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            SDS
+        </th>
+        <th>
+            Supplier ID
+        </th>
+        <th>
+            Country
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Erp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SuppID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ErpCountryLU)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.Erp }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Erp }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Erp })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

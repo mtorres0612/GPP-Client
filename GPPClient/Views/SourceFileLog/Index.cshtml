@@ -1,0 +1,190 @@
+﻿@model PagedList.IPagedList<GPPClientModel.SourceFileLog>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Message Inquiry";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.Label("MessageDirection", "Message Direction", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("directionCode", new SelectList(ViewBag.messageDirectionList, "Value", "Text", ViewBag.directionCode), "Select File Direction", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("StartDate", "Start Date", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBox("startDate", ViewBag.startDate as string, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("EndDate", "End Date", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBox("endDate", ViewBag.endDate as string, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Status", "Status", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("status", new SelectList(ViewBag.statusList, "Value", "Text", ViewBag.status), "Select Status", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.Label("ERP", "SDS Environment", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("erp", new SelectList(ViewBag.erpList, "Value", "Text", ViewBag.erp), "Select ERP", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("TradingPartner", "Trading Partner", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("trdpCode", new SelectList(ViewBag.tradingPartnerList, "Value", "Text", ViewBag.trdpCode), "Select Trading Partner", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("MsgCode", "Message Code", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("msgCode", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text", ViewBag.msgCode), "Select Message Code", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("ApplicationCode", "Application Code", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("aplucode", new SelectList(ViewBag.appCodeList, "Value", "Text", ViewBag.applicationCode), "Select Application Code", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-10 text-center">
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Status
+        </th>
+        <th>
+            Trading Partner
+        </th>
+        <th>
+            Message Code
+        </th>
+        <th>
+            SDS
+        </th>
+        <th>
+            Process Date
+        </th>
+        <th>
+            Source File Name
+        </th>
+        <th>
+            Destination File Name
+        </th>
+        <th>
+            Interchange No
+        </th>
+        <th>
+            Document No
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SflgID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrdpCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MsgCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ERP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcessDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceFilename)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationFilename)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InterchangeNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentNo)
+            </td>
+        </tr>
+    }
+
+</table>
+
+@if (Model.PageCount > 0)
+{
+    <span>Page</span> @(Model.PageCount < @Model.PageNumber ? 0 : @Model.PageNumber) <span>of</span> @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page
+                                                                , startDate = ViewBag.startDate
+                                                                , endDate = ViewBag.endDate
+                                                                , erp = ViewBag.erp
+                                                                , status = ViewBag.status
+                                                                , msgCode = ViewBag.msgCode
+                                                                , aplucode = ViewBag.aplucode
+                                                                , trdpCode = ViewBag.trdpCode
+                                                                , directionCode = ViewBag.directionCode
+                                                                }))
+}
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $(function () {
+
+        PopulateMessageCodes($("#trdpCode").val());
+
+        $("#trdpCode").change(function () {
+            PopulateMessageCodes($(this).val());
+        });
+
+        function PopulateMessageCodes(trdpCode) {
+            $.ajax({
+                url: '@Url.Action("PopulateMessageCodes", "SourceFileLog")',
+                type: "GET",
+                dataType: "JSON",
+                data: { 'trdpCode': trdpCode },
+                success: function (messageCodes) {
+                    $("#msgCode").html(""); // clear before appending new list 
+                    $.each(messageCodes, function (i, item) {
+                        $("#msgCode").append(
+                            $('<option></option>').val(item.Value).html(item.Text));
+                    });
+                }
+            });
+        }
+        
+    });
+</script>

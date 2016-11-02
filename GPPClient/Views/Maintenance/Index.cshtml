@@ -1,0 +1,75 @@
+﻿@model PagedList.IPagedList<GPPClientModel.TradingPartner>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Trading Partner";
+}
+
+<p>
+    @Html.ActionLink("New Trading Partner", "CreateTradingPartner")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            Trading Partner Code
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Principal
+        </th>
+        <th>
+            Country Code
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Ajax.ActionLink(item.TradingPartnerCode,
+                                 "GetMessagesPerTradingPartner",
+                                 new 
+                                 { 
+                                     trdpCode = item.TradingPartnerCode,
+                                     coluCode = item.ColuCode 
+                                 },
+                                 new AjaxOptions 
+                                 {
+                                     UpdateTargetId = "MessagesList",
+                                     InsertionMode  = InsertionMode.Replace,
+                                     HttpMethod     = "GET"
+                                 }
+                                 )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Principal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ColuCode)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditTradingPartner", new { id = item.Id }) |
+                @Html.ActionLink("Details", "TradingPartnerDetails", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "DeleteTradingPartner", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+<div id="MessagesList"></div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+}

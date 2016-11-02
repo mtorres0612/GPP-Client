@@ -1,0 +1,37 @@
+﻿@model IEnumerable<GPPClientModel.FileType>
+
+@{
+    ViewBag.Title = "File Type";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FileTypeCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FileTypeName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FileTypeCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FileTypeName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.FileTypeCode }) |
+            @Html.ActionLink("Details", "Details", new { id = item.FileTypeCode }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.FileTypeCode })
+        </td>
+    </tr>
+}
+
+</table>

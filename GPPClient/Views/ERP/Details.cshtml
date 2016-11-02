@@ -1,0 +1,47 @@
+﻿@model GPPClientModel.ERP
+
+@{
+    ViewBag.Title = "SDS Environment Details";
+}
+
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Erp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Erp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SuppID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SuppID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ErpCountryLU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ErpCountryLU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Erp }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
