@@ -159,7 +159,58 @@ namespace GPPClientDAL
 
         public int Insert(MessageSettings item)
         {
-            throw new NotImplementedException();
+            string query = "FT_MessageSettingsInsProc";
+            int result = 0;
+
+            SqlParameter sqlParamOutput = new SqlParameter("@returnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            SqlParameter[] sqlParams =  
+            {
+                new SqlParameter("@msgCode", item.MsgCode),
+                new SqlParameter("@ERP", item.ERP),
+                new SqlParameter("@PRNCPL", item.PRNCPL),
+                new SqlParameter("@messageFileSourceId", item.MessageFileSourceId),
+                new SqlParameter("@msetSourceFileMask", item.SourceFileMask),
+                new SqlParameter("@messageFileDestinationId", item.MessageFileDestinationId),
+                new SqlParameter("@msetFileType", item.FileType),
+                new SqlParameter("@msetFTPServerIP", item.FtpServerIP),
+                new SqlParameter("@msetFTPPort", item.FtpPort),
+                new SqlParameter("@msetFTPFolder", item.FtpFolder),
+                new SqlParameter("@msetFTPUserName", item.FtpUserName),
+                new SqlParameter("@msetFTPPassword", item.FtpPassword),
+                new SqlParameter("@msetFTPBeforePutCmd", item.FtpBeforePutCmd),
+                new SqlParameter("@msetBackUpFolder", item.BackUpFolder),
+                new SqlParameter("@msetBackUpFolderOut", item.BackUpFolderOut),
+                new SqlParameter("@msetNoMappingFolder", item.NoMappingFolder),
+                new SqlParameter("@msetNoFTPSettingsFolder", item.NoFTPSettingsFolder),
+                new SqlParameter("@msetNotValidFolder", item.NotValidFolder),
+                new SqlParameter("@MsetSendSuccessNotification", item.SendSuccessNotification),                                    
+                new SqlParameter("@User", item.User),
+                new SqlParameter("@msetFITEMask", item.FITEMask),
+                new SqlParameter("@msetIsZip", item.IsZip),
+                new SqlParameter("@msetZipPassword", item.ZipPassword),
+                new SqlParameter("@MsetIsZipSource", item.IsZipSource),
+                new SqlParameter("@msetRetention", item.Retention),
+                new SqlParameter("@MsetFilesSentSingle", item.FilesSentStatusSingle),
+                new SqlParameter("@MsetFilesSentBatch", item.FilesSentStatusBatch),
+                new SqlParameter("@MsetFileConvertionFlag", item.FileConvertionFlag),
+                new SqlParameter("@MsetSourceCodePage", item.SourceCodePage),
+                new SqlParameter("@MsetDestinationCodePage", item.DestinationCodePage),
+                new SqlParameter("@MsetFilePickupDelay", item.MsetFilePickupDelay),
+                new SqlParameter("@MsetBatchRun", item.MsetBatchRun),
+                new SqlParameter("@MsetBatchTime", item.MsetBatchTime),
+                new SqlParameter("@MsetRunTime", item.MsetRunTime),
+                new SqlParameter("@MsetStartTime", item.MsetStartTime),
+                new SqlParameter("@MsetEndTime", item.MsetEndTime),
+                new SqlParameter("@MsetInterval", item.MsetInterval),
+                new SqlParameter("@MsetMaxThreadCount", item.MsetMaxThreadCount),
+                sqlParamOutput
+            };
+
+            GPPClientDB.GPPClientDB.ExecuteNonQuery(query, sqlParams);
+
+            result = Convert.ToInt32(sqlParamOutput.Value);
+
+            return result;
         }
 
         public int Update(MessageSettings item)

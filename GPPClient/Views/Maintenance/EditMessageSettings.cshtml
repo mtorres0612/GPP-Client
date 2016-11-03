@@ -67,8 +67,8 @@
 
                         <div class="form-horizontal">
                             <div class="alert alert-danger" id="divMsetValidationSummary">
-                                <strong>Error saving message.</strong> Details:
-                                <ul id="lstValidationSummary"></ul>
+                                <strong>Error saving message settings.</strong> Details:
+                                <ul id="lstMsetValidationSummary"></ul>
                             </div>
 
                             <div class="row">
@@ -309,50 +309,50 @@
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("SourceUsername", "Username", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.SourceUserName, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("SourceUsername", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.SourceUserName, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("SourceAddress", "IP Address", htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblSourceAddress" })
+                                                    @Html.LabelFor(model => model.SourceAddress, htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblSourceAddress" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("SourceAddress", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.SourceAddress, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("SourcePassword", "Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.SourcePassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.Password("SourcePassword", string.Empty, new { @class = "form-control" })
+                                                    @Html.PasswordFor(model => model.SourcePassword, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("SourceFolder", "Folder", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.SourceFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("SourceFolder", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.SourceFolder, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("SourceConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.SourceConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.Password("SourceConfirmPassword", string.Empty, new { @class = "form-control" })
+                                                    @Html.PasswordFor(model => model.SourceConfirmPassword, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -378,50 +378,50 @@
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("DestinationUsername", "Username", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.DestinationUsername, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationUsername", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.DestinationUsername, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("DestinationAddress", "IP Address", htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblDestinationAddress" })
+                                                    @Html.LabelFor(model => model.DestinationAddress, htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblDestinationAddress" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationAddress", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.DestinationAddress, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("DestinationPassword", "Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.DestinationPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.Password("DestinationPassword", string.Empty, new { @class = "form-control" })
+                                                    @Html.PasswordFor(model => model.DestinationPassword, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("DestinationFolder", "Folder", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.DestinationFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationFolder", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.DestinationFolder, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("DestinationConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.DestinationConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.Password("DestinationConfirmPassword", string.Empty, new { @class = "form-control" })
+                                                    @Html.PasswordFor(model => model.DestinationConfirmPassword, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -434,10 +434,10 @@
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.Label("DestinationPort", "Port", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.DestinationPort, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationPort", string.Empty, new { @class = "form-control" })
+                                                    @Html.EditorFor(model => model.DestinationPort, new { htmlAttributes = new { @class = "form-control" } })
                                                 </div>
                                             </div>
                                         </div>
@@ -656,7 +656,7 @@
         $("#MessageFileSource_TransmissionTypeID").change(function () {
 
             var transType = $("#MessageFileSource_TransmissionTypeID option:selected").text();
-            $("#SourceUsername, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
+            $("#SourceUserName, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
             FillMessageSourceDetails(transType);
         });
 
@@ -672,7 +672,7 @@
             PopulatePrincipal($("#ERP").val(), @Model.PRNCPL);
 
             var transTypeSrc = $("#MessageFileSource_TransmissionTypeID option:selected").text();
-            $("#SourceUsername, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
+            $("#SourceUserName, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
             FillMessageSourceDetails(transTypeSrc);
 
             var transTypeDest = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
@@ -764,7 +764,7 @@
                 data: { 'fileTransferSettingId': fileTransferSettingId },
                 success: function (data) {
                     if (isSource) {
-                        $("#SourceUsername").val(data.ftpSettingItem.UserName);
+                        $("#SourceUserName").val(data.ftpSettingItem.UserName);
                         $("#SourceAddress").val(data.ftpSettingItem.IPAddress);
                         $("#SourcePassword").val(data.ftpSettingItem.Password);
                         $("#SourceFolder").val(data.ftpSettingItem.Folder);
@@ -790,7 +790,7 @@
                 data: { 'fileTransferSettingId': fileTransferSettingId },
                 success: function (data) {
                     if (isSource) {
-                        $("#SourceUsername").val(data.sftpSettingItem.UserName);
+                        $("#SourceUserName").val(data.sftpSettingItem.UserName);
                         $("#SourceAddress").val(data.sftpSettingItem.IPAddress);
                         $("#SourcePassword").val(data.sftpSettingItem.Password);
                         $("#SourceFolder").val(data.sftpSettingItem.Folder);
@@ -815,7 +815,7 @@
                 data: { 'fileTransferSettingId': fileTransferSettingId },
                 success: function (data) {
                     if (isSource) {
-                        $("#SourceUsername").val(data.smtpSettingItem.UserName);
+                        $("#SourceUserName").val(data.smtpSettingItem.UserName);
                         $("#SourceAddress").val(data.smtpSettingItem.SMTPServer);
                         $("#SourcePassword").val(data.smtpSettingItem.Password);
                         $("#SourceConfirmPassword").val(data.smtpSettingItem.Password);
@@ -838,7 +838,7 @@
                 data: { 'fileTransferSettingId': fileTransferSettingId },
                 success: function (data) {
                     if (isSource) {
-                        $("#SourceUsername").val(data.networkSettingItem.UserName);
+                        $("#SourceUserName").val(data.networkSettingItem.UserName);
                         $("#SourceAddress").val(data.networkSettingItem.Path);
                         $("#SourcePassword").val(data.networkSettingItem.Password);
                         $("#SourceConfirmPassword").val(data.networkSettingItem.Password);
@@ -861,7 +861,7 @@
                 data: { 'fileTransferSettingId': fileTransferSettingId },
                 success: function (data) {
                     if (isSource) {
-                        $("#SourceUsername").val(data.httpSettingItem.UserName);
+                        $("#SourceUserName").val(data.httpSettingItem.UserName);
                         $("#SourceAddress").val(data.httpSettingItem.URL);
                         $("#SourcePassword").val(data.httpSettingItem.Password);
                         $("#SourceConfirmPassword").val(data.httpSettingItem.Password);
@@ -883,9 +883,9 @@
         if (jsonResult.result == "ERROR")
         {
             $("#divMsetValidationSummary").show();
-            $("#lstValidationSummary").html("");
+            $("#lstMsetValidationSummary").html("");
             for (var i = 0; i < jsonResult.errorlist.length; i++) {
-                $("#lstValidationSummary").append("<li>" + jsonResult.errorlist[i].ErrorMessage + "</li>");
+                $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
             }
         }
         else {

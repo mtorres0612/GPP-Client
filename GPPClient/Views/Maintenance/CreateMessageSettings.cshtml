@@ -67,9 +67,11 @@
                         @Html.AntiForgeryToken()
 
                         <div class="form-horizontal">
+
+                            @Html.ValidationSummary(false)
                             <div class="alert alert-danger" id="divMsetValidationSummary">
                                 <strong>Error saving message settings.</strong> Details:
-                                <ul id="lstValidationSummary"></ul>
+                                <ul id="lstMsetValidationSummary"></ul>
                             </div>
 
                             <div class="row">
@@ -101,7 +103,7 @@
                                             @Html.LabelFor(model => model.PRNCPL, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                         </div>
                                         <div class="col-xs-10">
-                                            @Html.DropDownList("PRNCPL", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Select Principal", new { @class = "form-control" })
+                                            @Html.DropDownList("PRNCPL", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), new { @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.PRNCPL, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -273,7 +275,7 @@
                                                     @Html.LabelFor(model => model.SourceCodePage, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-9">
-                                                    @Html.DropDownListFor(model => model.SourceCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text"), "Select File Encoding", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(model => model.SourceCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text"), new { @class = "form-control" })
                                                     @Html.ValidationMessageFor(model => model.SourceCodePage, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -284,7 +286,7 @@
                                                     @Html.LabelFor(model => model.DestinationCodePage, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-9">
-                                                    @Html.DropDownListFor(model => model.DestinationCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text"), "Select File Encoding", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(model => model.DestinationCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text", 65001), new { @class = "form-control" })
                                                     @Html.ValidationMessageFor(model => model.DestinationCodePage, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -745,6 +747,8 @@
                 data: { 'erp': erp },
                 success: function (principalList) {
                     $("#PRNCPL").html("");
+                    $("#PRNCPL").append($('<option></option>').val("").html("Select Principal"));
+
                     $.each(principalList, function (i, item) {
                         $("#PRNCPL").append(
                            $('<option></option>').val(item.Value).html(item.Text));
@@ -881,9 +885,9 @@
         if (jsonResult.result == "ERROR")
         {
             $("#divMsetValidationSummary").show();
-            $("#lstValidationSummary").html("");
+            $("#lstMsetValidationSummary").html("");
             for (var i = 0; i < jsonResult.errorlist.length; i++) {
-                $("#lstValidationSummary").append("<li>" + jsonResult.errorlist[i].ErrorMessage + "</li>");
+                $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
             }
         }
         else {

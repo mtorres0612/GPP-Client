@@ -44,7 +44,7 @@ namespace GPPClientDAL
             }
 
             Principal defaultItem = new Principal();
-            defaultItem.PRNCPL    = string.Empty;
+            defaultItem.PRNCPL    = "IMS";
             defaultItem.Display   = "IMS";
             list.Add(defaultItem);
 

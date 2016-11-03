@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,7 @@ namespace GPPClientModel
 
         private FileTransferSetting _messageFileSource;
 
+        [Required]
         public FileTransferSetting MessageFileSource
         {
             get { return _messageFileSource; }
@@ -54,6 +56,7 @@ namespace GPPClientModel
 
         private FileTransferSetting _messageFileDestination;
 
+        [Required]
         public FileTransferSetting MessageFileDestination
         {
             get { return _messageFileDestination; }
@@ -80,6 +83,7 @@ namespace GPPClientModel
         private string _erp;
 
         [Display(Name = "SDS Environment")]
+        [Required]
         public string ERP
         {
             get { return _erp; }
@@ -89,6 +93,7 @@ namespace GPPClientModel
         private string _prncpl;
 
         [Display(Name = "Principal")]
+        [Required]
         public string PRNCPL
         {
             get { return _prncpl; }
@@ -160,6 +165,7 @@ namespace GPPClientModel
         private string _backUpFolder;
 
         [Display(Name = "Backup Folder")]
+        [Required]
         public string BackUpFolder
         {
             get { return _backUpFolder; }
@@ -291,19 +297,19 @@ namespace GPPClientModel
             set { _fileConvertionFlag = value; }
         }
 
-        private int _sourceCodePage;
+        private int? _sourceCodePage;
 
         [Display(Name = "Source")]
-        public int SourceCodePage
+        public int? SourceCodePage
         {
             get { return _sourceCodePage; }
             set { _sourceCodePage = value; }
         }
 
-        private int _destinationCodePage;
+        private int? _destinationCodePage;
 
         [Display(Name = "Destination")]
-        public int DestinationCodePage
+        public int? DestinationCodePage
         {
             get { return _destinationCodePage; }
             set { _destinationCodePage = value; }
@@ -397,21 +403,131 @@ namespace GPPClientModel
             set { _msetInterval = value; }
         }
 
-        private string _sourceUserName;
+        [Display(Name = "UserName")]
+        public string SourceUserName { get; set; }
+        [Display(Name = "Source Address")]
+        public string SourceAddress { get; set; }
+        [Display(Name = "Password")]
+        public string SourcePassword { get; set; }
+        [Display(Name = "Folder")]
+        public string SourceFolder { get; set; }
+        [Display(Name = "Confirm Password")]
+        public string SourceConfirmPassword { get; set; }
 
-        public string SourceUserName
-        {
-            get { return _sourceUserName; }
-            set { _sourceUserName = value; }
-        }
+        [Display(Name = "UserName")]
+        public string DestinationUsername { get; set; }
+        [Display(Name = "Destination Address")]
+        public string DestinationAddress { get; set; }
+        [Display(Name = "Password")]
+        public string DestinationPassword { get; set; }
+        [Display(Name = "Folder")]
+        public string DestinationFolder { get; set; }
+        [Display(Name = "Confirm Password")]
+        public string DestinationConfirmPassword { get; set; }
+        [Display(Name = "Port")]
+        public string DestinationPort { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (MessageFileSource.TransmissionTypeID == 1)
+            if (SourcePassword != SourceConfirmPassword)
             {
-                if (string.IsNullOrEmpty(SourceUserName))
+                yield return new ValidationResult("File source password and confirmation does not match.");
+            }
+            if (DestinationPassword != DestinationConfirmPassword)
+            {
+                yield return new ValidationResult("File destination password and confirmation does not match.");
+            }
+
+            if (FileConvertionFlag)
+            {
+                if (SourceCodePage.Equals(DestinationCodePage))
                 {
-                    yield return new ValidationResult("Username is required in FTP!");
+                    yield return new ValidationResult("Cannot use the same File Conversion Format.");
+                }
+                else
+                {
+                    if (SourceCodePage.Equals(0))
+                    {
+                        yield return new ValidationResult("Select File Conversion Source Format.");
+                    }
+                    if (DestinationCodePage.Equals(0))
+                    {
+                        yield return new ValidationResult("Select File Conversion Destination Format.");
+                    }
+                }
+            }
+
+            DateTime dtStart = DateTime.ParseExact(MsetStartTimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+            DateTime dtEnd = DateTime.ParseExact(MsetEndTimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+
+            if (dtEnd.TimeOfDay < dtStart.TimeOfDay)
+            {
+                yield return new ValidationResult("End Time must not be lesser than Start Time.");
+            }
+
+            if (MessageFileSource.TransmissionTypeID == null)
+            {
+                yield return new ValidationResult("Source Transmission Type is required.");
+            }
+            else
+            {
+                if (MessageFileSource.TransmissionTypeID == 1 || MessageFileSource.TransmissionTypeID == 2)
+                {
+                    if (string.IsNullOrEmpty(SourceUserName))
+                    {
+                        yield return new ValidationResult("Source Username is required.");
+                    }
+                    if (string.IsNullOrEmpty(SourceAddress))
+                    {
+                        yield return new ValidationResult("Source IP Address is required.");
+                    }
+                }
+                else if (MessageFileSource.TransmissionTypeID == 4)
+                {
+                    if (string.IsNullOrEmpty(SourceAddress))
+                    {
+                        yield return new ValidationResult("File Source Path is required.");
+                    }
+                }
+                else if (MessageFileSource.TransmissionTypeID == 5)
+                {
+                    if (string.IsNullOrEmpty(SourceAddress))
+                    {
+                        yield return new ValidationResult("Source HTTP not yet implemented.");
+                    }
+                }
+            }
+
+            if (MessageFileDestination.TransmissionTypeID == null)
+            {
+                yield return new ValidationResult("Destination Transmission Type is required.");
+            }
+            else
+            {
+                if (MessageFileDestination.TransmissionTypeID == 1 || MessageFileDestination.TransmissionTypeID == 2)
+                {
+                    if (string.IsNullOrEmpty(DestinationUsername))
+                    {
+                        yield return new ValidationResult("Destination Username is required.");
+                    }
+                    if (string.IsNullOrEmpty(DestinationAddress))
+                    {
+                        yield return new ValidationResult("Destination IP Address is required.");
+                    }
+                }
+                else if (MessageFileDestination.TransmissionTypeID == 4)
+                {
+                    if (string.IsNullOrEmpty(DestinationAddress))
+                    {
+                        yield return new ValidationResult("File Destination Path is required.");
+                    }
+                }
+                else if (MessageFileDestination.TransmissionTypeID == 5)
+                {
+                    if (string.IsNullOrEmpty(DestinationAddress))
+                    {
+                        yield return new ValidationResult("File Destination URL is required");
+                    }
                 }
             }
         }

@@ -10,6 +10,7 @@ using GPPUtilities;
 using System.Text;
 using System.Globalization;
 using GPPClient.Utilities;
+using System.ComponentModel.DataAnnotations;
 
 namespace GPPClient.Controllers
 {
@@ -383,25 +384,81 @@ namespace GPPClient.Controllers
         [HttpPost]
         public ActionResult CreateMessageSettings(MessageSettings item, FormCollection fc)
         {
+            int sourceId = 0, destinationId = 0;
+
             if (ModelState.IsValid)
             {
+                #region [Update Message Settings]
+                DateTime dtBatch = DateTime.ParseExact(item.MsetBatchTimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                TimeSpan tsBatch = dtBatch.TimeOfDay;
+                item.MsetBatchTime = item.MsetBatchTime.Date + tsBatch;
 
+                DateTime dtStart = DateTime.ParseExact(item.MsetStartTimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                TimeSpan tsStart = dtStart.TimeOfDay;
+                item.MsetStartTime = item.MsetStartTime.Date + tsStart;
+
+                DateTime dtEnd = DateTime.ParseExact(item.MsetEndTimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                TimeSpan tsEnd = dtEnd.TimeOfDay;
+                item.MsetEndTime = item.MsetEndTime.Date + tsEnd;
+
+                oMessageSettingsBL.Insert(item);
+                #endregion
+
+                #region [Update FileTransferSetting]
+                FileTransferSetting source = new FileTransferSetting();
+                source.MsgCode = item.MsgCode;
+                source.TransmissionTypeID = item.MessageFileSource.TransmissionTypeID;
+
+                if (item.MessageFileSourceId <= 0)
+                {
+                    sourceId = oFileTransferSettingBL.Insert(source);
+                }
+                else
+                {
+                    source.FileTransferSettingID = item.MessageFileSourceId;
+                    sourceId = item.MessageFileSourceId;
+                    oFileTransferSettingBL.Update(source);
+                }
+
+                FileTransferSetting destination = new FileTransferSetting();
+                destination.MsgCode = item.MsgCode;
+                destination.TransmissionTypeID = item.MessageFileDestination.TransmissionTypeID;
+
+                if (item.MessageFileDestinationId <= 0)
+                {
+                    destinationId = oFileTransferSettingBL.Insert(destination);
+                }
+                else
+                {
+                    destination.FileTransferSettingID = item.MessageFileDestinationId;
+                    destinationId = item.MessageFileDestinationId;
+                    oFileTransferSettingBL.Update(destination);
+                }
+                #endregion
+
+                #region [Update TransmissionSetting]
+                SaveTransmissionSetting(item.MessageFileSource.TransmissionTypeID, sourceId, true, item);
+                SaveTransmissionSetting(item.MessageFileDestination.TransmissionTypeID, destinationId, false, item);
+
+                #endregion
             }
             else
             {
-                List<ModelError> errors = new List<ModelError>();
-                foreach (ModelState modelState in ViewData.ModelState.Values.Where(x => x.Errors.Count >= 1))
+                List<string> errors = new List<string>();
+                foreach (ModelState modelState in ViewData.ModelState.Values.Where(x => x.Errors.Count > 0))
                 {
                     foreach (ModelError error in modelState.Errors)
                     {
-                        errors.Add(error);
+                        errors.Add(error.ErrorMessage);
                     }
                 }
+
                 return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult EditMessageSettings(string msgCode)
         {
             MessageSettings item        = new MessageSettings();
@@ -414,7 +471,7 @@ namespace GPPClient.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditMessageSettings(MessageSettings item, FormCollection fc)
+        public ActionResult EditMessageSettings(MessageSettings item)
         {
             int result = 0, sourceId = 0, destinationId = 0;
 
@@ -469,21 +526,22 @@ namespace GPPClient.Controllers
                 #endregion
 
                 #region [Update TransmissionSetting]
-                    SaveTransmissionSetting(item.MessageFileSource.TransmissionTypeID, sourceId, true, fc);
-                    SaveTransmissionSetting(item.MessageFileDestination.TransmissionTypeID, destinationId, false, fc);
+                    SaveTransmissionSetting(item.MessageFileSource.TransmissionTypeID, sourceId, true, item);
+                    SaveTransmissionSetting(item.MessageFileDestination.TransmissionTypeID, destinationId, false, item);
 
                 #endregion
             }
             else
             {
-                List<ModelError> errors = new List<ModelError>();
-                foreach (ModelState modelState in ViewData.ModelState.Values)
+                List<string> errors = new List<string>();
+                foreach (ModelState modelState in ViewData.ModelState.Values.Where(x => x.Errors.Count > 0))
                 {
                     foreach (ModelError error in modelState.Errors)
                     {
-                        errors.Add(error);
+                        errors.Add(error.ErrorMessage);
                     }
                 }
+
                 return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
             }
 
@@ -495,7 +553,7 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
-        private void SaveTransmissionSetting(int transmissionTypeId, int fileTransferSettingId, bool isSource, FormCollection fc)
+        private void SaveTransmissionSetting(int? transmissionTypeId, int fileTransferSettingId, bool isSource, MessageSettings mSetItem)
         {
             TransmissionTypes transType = (TransmissionTypes) transmissionTypeId;
 
@@ -503,33 +561,33 @@ namespace GPPClient.Controllers
             {
                 case TransmissionTypes.FTP:
                     if (isSource)
-                        SaveSourceFTPSetting(fileTransferSettingId, fc);
+                        SaveSourceFTPSetting(fileTransferSettingId, mSetItem);
                     else
-                        SaveDestFTPSetting(fileTransferSettingId, fc);
+                        SaveDestFTPSetting(fileTransferSettingId, mSetItem);
                     break;
                 case TransmissionTypes.SFTP:
                     if (isSource)
-                        SaveSourceSFTPSetting(fileTransferSettingId, fc);
+                        SaveSourceSFTPSetting(fileTransferSettingId, mSetItem);
                     else
-                        SaveDestSFTPSetting(fileTransferSettingId, fc);
+                        SaveDestSFTPSetting(fileTransferSettingId, mSetItem);
                     break;
                 case TransmissionTypes.NETWORK:
                     if (isSource)
-                        SaveSourceNetworkSetting(fileTransferSettingId, fc);
+                        SaveSourceNetworkSetting(fileTransferSettingId, mSetItem);
                     else
-                        SaveDestNetworkSetting(fileTransferSettingId, fc);
+                        SaveDestNetworkSetting(fileTransferSettingId, mSetItem);
                     break;
                 case TransmissionTypes.EMAIL:
                     if (isSource)
-                        SaveSourceSMTPSetting(fileTransferSettingId, fc);
+                        SaveSourceSMTPSetting(fileTransferSettingId, mSetItem);
                     else
-                        SaveDestSMTPSetting(fileTransferSettingId, fc);
+                        SaveDestSMTPSetting(fileTransferSettingId, mSetItem);
                     break;
                 case TransmissionTypes.HTTP:
                     if (isSource)
-                        SaveSourceHTTPSetting(fileTransferSettingId, fc);
+                        SaveSourceHTTPSetting(fileTransferSettingId, mSetItem);
                     else
-                        SaveDestHTTPSetting(fileTransferSettingId, fc);
+                        SaveDestHTTPSetting(fileTransferSettingId, mSetItem);
                     break;
                 default:
                     break;
@@ -615,31 +673,31 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", ftpSettingItem = item }, JsonRequestBehavior.AllowGet);
         }
 
-        private void SaveDestFTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveDestFTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             FTPSettingBL oFTPSettingBL = FTPSettingBL.GetInstance();
             FTPSetting item            = new FTPSetting();
             item.FileTransferSettingID = fileTransferSettingId;
-            item.UserName              = fc["DestinationUsername"];
-            item.Password              = fc["DestinationPassword"];
-            item.IPAddress             = fc["DestinationAddress"];
-            item.Folder                = fc["DestinationFolder"];
+            item.UserName              = mSetItem.DestinationUsername;
+            item.Password              = mSetItem.DestinationPassword;
+            item.IPAddress             = mSetItem.DestinationAddress;
+            item.Folder                = mSetItem.DestinationFolder;
             int thisPort               = 0;
-            int.TryParse(fc["DestinationPort"], out thisPort);
+            int.TryParse(mSetItem.DestinationPort, out thisPort);
             item.PortNumber            = thisPort;
 
             oFTPSettingBL.Update(item);
         }
 
-        private void SaveSourceFTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveSourceFTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             FTPSettingBL oFTPSettingBL = FTPSettingBL.GetInstance();
             FTPSetting item            = new FTPSetting();
             item.FileTransferSettingID = fileTransferSettingId;
-            item.UserName              = fc["SourceUsername"];
-            item.Password              = fc["SourcePassword"];
-            item.IPAddress             = fc["SourceAddress"];
-            item.Folder                = fc["SourceFolder"];
+            item.UserName              = mSetItem.SourceUserName;
+            item.Password              = mSetItem.SourcePassword;
+            item.IPAddress             = mSetItem.SourceAddress;
+            item.Folder                = mSetItem.SourceFolder;
 
             oFTPSettingBL.Update(item);
         }
@@ -655,31 +713,31 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", sftpSettingItem = item }, JsonRequestBehavior.AllowGet);
         }
 
-        private void SaveDestSFTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveDestSFTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             SFTPSettingBL oSFTPSettingBL = SFTPSettingBL.GetInstance();
             SFTPSetting item             = new SFTPSetting();
             item.FileTransferSettingID   = fileTransferSettingId;
-            item.UserName                = fc["DestinationUsername"];
-            item.Password                = fc["DestinationPassword"];
-            item.IPAddress               = fc["DestinationAddress"];
-            item.Folder                  = fc["DestinationFolder"];
+            item.UserName                = mSetItem.DestinationUsername;
+            item.Password                = mSetItem.DestinationPassword;
+            item.IPAddress               = mSetItem.DestinationAddress;
+            item.Folder                  = mSetItem.DestinationFolder;
             int thisPort                 = 0;
-            int.TryParse(fc["DestinationPort"], out thisPort);
+            int.TryParse(mSetItem.DestinationPort, out thisPort);
             item.PortNumber              = thisPort;
 
             oSFTPSettingBL.Update(item);
         }
 
-        private void SaveSourceSFTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveSourceSFTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             SFTPSettingBL oSFTPSettingBL = SFTPSettingBL.GetInstance();
             SFTPSetting item             = new SFTPSetting();
             item.FileTransferSettingID   = fileTransferSettingId;
-            item.UserName                = fc["SourceUsername"];
-            item.Password                = fc["SourcePassword"];
-            item.IPAddress               = fc["SourceAddress"];
-            item.Folder                  = fc["SourceFolder"];
+            item.UserName                = mSetItem.SourceUserName;
+            item.Password                = mSetItem.SourcePassword;
+            item.IPAddress               = mSetItem.SourceAddress;
+            item.Folder                  = mSetItem.SourceFolder;
 
             oSFTPSettingBL.Update(item);
         }
@@ -699,26 +757,26 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", smtpSettingItem = item }, JsonRequestBehavior.AllowGet);
         }
 
-        private void SaveDestSMTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveDestSMTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             SMTPSettingBL oSMTPSettingBL = SMTPSettingBL.GetInstance();
             SMTPSetting item             = new SMTPSetting();
             item.FileTransferSettingID   = fileTransferSettingId;
-            item.UserName                = fc["DestinationUsername"];
-            item.Password                = fc["DestinationPassword"];
-            item.SMTPServer              = fc["DestinationAddress"];
+            item.UserName                = mSetItem.DestinationUsername;
+            item.Password                = mSetItem.DestinationPassword;
+            item.SMTPServer              = mSetItem.DestinationAddress;
 
             oSMTPSettingBL.Update(item);
         }
 
-        private void SaveSourceSMTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveSourceSMTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             SMTPSettingBL oSMTPSettingBL = SMTPSettingBL.GetInstance();
             SMTPSetting item             = new SMTPSetting();
             item.FileTransferSettingID   = fileTransferSettingId;
-            item.UserName                = fc["SourceUsername"];
-            item.Password                = fc["SourcePassword"];
-            item.SMTPServer              = fc["SourceAddress"];
+            item.UserName                = mSetItem.SourceUserName;
+            item.Password                = mSetItem.SourcePassword;
+            item.SMTPServer              = mSetItem.SourceAddress;
 
             oSMTPSettingBL.Update(item);
         }
@@ -738,28 +796,28 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", networkSettingItem = item }, JsonRequestBehavior.AllowGet);
         }
 
-        private void SaveDestNetworkSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveDestNetworkSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             NetworkSettingBL oNetworkSettingBL = NetworkSettingBL.GetInstance();
             NetworkSetting item                = new NetworkSetting();
             item.FileTransferSettingID         = fileTransferSettingId;
             item.MessageFileID                 = 0;
-            item.UserName                      = fc["DestinationUsername"];
-            item.Password                      = fc["DestinationPassword"];
-            item.Path                          = fc["DestinationAddress"];
+            item.UserName                      = mSetItem.DestinationUsername;
+            item.Password                      = mSetItem.DestinationPassword;
+            item.Path                          = mSetItem.DestinationAddress;
 
             oNetworkSettingBL.Update(item);
         }
 
-        private void SaveSourceNetworkSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveSourceNetworkSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             NetworkSettingBL oNetworkSettingBL = NetworkSettingBL.GetInstance();
             NetworkSetting item                = new NetworkSetting();
             item.FileTransferSettingID         = fileTransferSettingId;
             item.MessageFileID                 = 0;
-            item.UserName                      = fc["SourceUsername"];
-            item.Password                      = fc["SourcePassword"];
-            item.Path                          = fc["SourceAddress"];
+            item.UserName                      = mSetItem.SourceUserName;
+            item.Password                      = mSetItem.SourcePassword;
+            item.Path                          = mSetItem.SourceAddress;
 
             oNetworkSettingBL.Update(item);
         }
@@ -779,26 +837,26 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", httpSettingItem = item }, JsonRequestBehavior.AllowGet);
         }
 
-        private void SaveDestHTTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveDestHTTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             HTTPSettingBL oHTTPSettingBL = HTTPSettingBL.GetInstance();
             HTTPSetting item             = new HTTPSetting();
             item.FileTransferSettingID   = fileTransferSettingId;
-            item.UserName                = fc["DestinationUsername"];
-            item.Password                = fc["DestinationPassword"];
-            item.URL                     = fc["DestinationAddress"];
+            item.UserName                = mSetItem.DestinationUsername;
+            item.Password                = mSetItem.DestinationPassword;
+            item.URL                     = mSetItem.DestinationAddress;
 
             oHTTPSettingBL.Update(item);
         }
 
-        private void SaveSourceHTTPSetting(int fileTransferSettingId, FormCollection fc)
+        private void SaveSourceHTTPSetting(int fileTransferSettingId, MessageSettings mSetItem)
         {
             HTTPSettingBL oHTTPSettingBL = HTTPSettingBL.GetInstance();
             HTTPSetting item             = new HTTPSetting();
             item.FileTransferSettingID   = fileTransferSettingId;
-            item.UserName                = fc["SourceUsername"];
-            item.Password                = fc["SourcePassword"];
-            item.URL                     = fc["SourceAddress"];
+            item.UserName                = mSetItem.SourceUserName;
+            item.Password                = mSetItem.SourcePassword;
+            item.URL                     = mSetItem.SourceAddress;
 
             //Source HTTP is not yet implemented, settings will not be saved
             //oHTTPSettingBL.Update(item);

@@ -9,18 +9,18 @@ namespace GPPClientModel
 {
     public class FileTransferSetting : BaseModel
     {
-        private int _fileTransferSettingID;
+        private int? _fileTransferSettingID;
 
-        public int FileTransferSettingID
+        public int? FileTransferSettingID
         {
             get { return _fileTransferSettingID; }
             set { _fileTransferSettingID = value; }
         }
 
-        private int _transmissionTypeID;
+        private int? _transmissionTypeID;
 
         [Display(Name = "Transmission Type")]
-        public int TransmissionTypeID
+        public int? TransmissionTypeID
         {
             get { return _transmissionTypeID; }
             set { _transmissionTypeID = value; }

@@ -37,7 +37,9 @@ namespace GPPClientBL
 
         public int Insert(MessageSettings item)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            result     = oMessageSettingsDAL.Insert(item);
+            return result;
         }
 
         public int Update(MessageSettings item)
