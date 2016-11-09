@@ -222,7 +222,7 @@ namespace GPPClientModel
         public string FITEMask
         {
             get { return _fiteMask; }
-            set { _fiteMask = value; }
+            set { _fiteMask = CleanString(value); }
         }
 
         private bool _isZip;
@@ -403,29 +403,105 @@ namespace GPPClientModel
             set { _msetInterval = value; }
         }
 
-        [Display(Name = "UserName")]
-        public string SourceUserName { get; set; }
-        [Display(Name = "Source Address")]
-        public string SourceAddress { get; set; }
-        [Display(Name = "Password")]
-        public string SourcePassword { get; set; }
-        [Display(Name = "Folder")]
-        public string SourceFolder { get; set; }
-        [Display(Name = "Confirm Password")]
-        public string SourceConfirmPassword { get; set; }
+        private string _sourceUserName;
 
         [Display(Name = "UserName")]
-        public string DestinationUsername { get; set; }
-        [Display(Name = "Destination Address")]
-        public string DestinationAddress { get; set; }
+        public string SourceUserName
+        {
+            get { return _sourceUserName; }
+            set { _sourceUserName = CleanString(value); }
+        }
+
+        private string _sourceAddress;
+
+        [Display(Name = "Source Address")]
+        public string SourceAddress
+        {
+            get { return _sourceAddress; }
+            set { _sourceAddress = CleanString(value); }
+        }
+
+        private string _sourcePassword;
+
         [Display(Name = "Password")]
-        public string DestinationPassword { get; set; }
+        public string SourcePassword
+        {
+            get { return _sourcePassword; }
+            set { _sourcePassword = CleanString(value); }
+        }
+
+        private string _sourceFolder;
+
         [Display(Name = "Folder")]
-        public string DestinationFolder { get; set; }
+        public string SourceFolder
+        {
+            get { return _sourceFolder; }
+            set { _sourceFolder = CleanString(value); }
+        }
+
+        private string _sourceConfirmPassword;
+
         [Display(Name = "Confirm Password")]
-        public string DestinationConfirmPassword { get; set; }
+        public string SourceConfirmPassword
+        {
+            get { return _sourceConfirmPassword; }
+            set { _sourceConfirmPassword = CleanString(value); }
+        }
+
+        private string _destinationUsername;
+
+        [Display(Name = "UserName")]
+        public string DestinationUsername
+        {
+            get { return _destinationUsername; }
+            set { _destinationUsername = CleanString(value); }
+        }
+
+        private string _destinationAddress;
+
+        [Display(Name = "Destination Address")]
+        public string DestinationAddress
+        {
+            get { return _destinationAddress; }
+            set { _destinationAddress = CleanString(value); }
+        }
+
+        private string _destinationPassword;
+
+        [Display(Name = "Password")]
+        public string DestinationPassword
+        {
+            get { return _destinationPassword; }
+            set { _destinationPassword = CleanString(value); }
+        }
+
+        private string _destinationFolder;
+
+        [Display(Name = "Folder")]
+        public string DestinationFolder
+        {
+            get { return _destinationFolder; }
+            set { _destinationFolder = CleanString(value); }
+        }
+
+        private string _destinationConfirmPassword;
+
+        [Display(Name = "Confirm Password")]
+        public string DestinationConfirmPassword
+        {
+            get { return _destinationConfirmPassword; }
+            set { _destinationConfirmPassword = CleanString(value); }
+        }
+
+        private string _destinationPort;
+
         [Display(Name = "Port")]
-        public string DestinationPort { get; set; }
+        public string DestinationPort
+        {
+            get { return _destinationPort; }
+            set { _destinationPort = CleanString(value); }
+        }
+
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

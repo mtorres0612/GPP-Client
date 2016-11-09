@@ -51,7 +51,9 @@ namespace GPPClientBL
 
         public int Delete(object id)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            result     = oMessageSettingsDAL.Delete(id);
+            return result;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model GPPClientModel.Messages
+﻿@model GPPClientModel.CustomModel
 
 @{
     Layout = null;
@@ -37,6 +37,9 @@
         width: auto;
         padding: 0;
     }
+    #tblMessageSettings tr td {
+        vertical-align: middle;
+    }
 </style>
 @using (Ajax.BeginForm("CreateMessage", "Maintenance", null, new AjaxOptions { HttpMethod = "post", OnSuccess = "GetResult" }))
 {
@@ -56,55 +59,55 @@
                         <ul id="lstValidationSummary"></ul>
                     </div>
 
-                    
+
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <div class="col-xs-3">
-                                        @Html.LabelFor(model => model.MsgCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                        @Html.LabelFor(model => model.Messages.MsgCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                     </div>
                                     <div class="col-xs-8">
-                                        @Html.EditorFor(model => model.MsgCode, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.MsgCode, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.Messages.MsgCode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Messages.MsgCode, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-3">
-                                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                        @Html.LabelFor(model => model.Messages.Name, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                     </div>
                                     <div class="col-xs-8">
-                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.Messages.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Messages.Name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-3">
-                                        @Html.LabelFor(model => model.ApplicationType, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                        @Html.LabelFor(model => model.Messages.ApplicationType, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                     </div>
                                     <div class="col-xs-8">
-                                        @Html.DropDownListFor(model => model.ApplicationType, new SelectList(ViewBag.appCodeList, "Value", "Text"), "Select Application Code", new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => model.ApplicationType, "", new { @class = "text-danger" })
+                                        @Html.DropDownListFor(model => model.Messages.ApplicationType, new SelectList(ViewBag.appCodeList, "Value", "Text", "FILETRANSFER"), "Select Application Code", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Messages.ApplicationType, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <div class="col-xs-3">
-                                        @Html.LabelFor(model => model.TradingPartnercode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                        @Html.LabelFor(model => model.Messages.TradingPartnercode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                     </div>
                                     <div class="col-xs-7">
-                                        @Html.EditorFor(model => model.TradingPartnercode, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                        @Html.ValidationMessageFor(model => model.TradingPartnercode, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.Messages.TradingPartnercode, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        @Html.ValidationMessageFor(model => model.Messages.TradingPartnercode, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-3">
-                                        @Html.LabelFor(model => model.ColuCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                        @Html.LabelFor(model => model.Messages.ColuCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                     </div>
                                     <div class="col-xs-7">
-                                        @Html.DropDownListFor(model => model.ColuCode, new SelectList(ViewBag.countryList, "Value", "Text", Model.ColuCode), "Select Country", new { @class = "form-control", @disabled = "disabled" })
-                                        @Html.HiddenFor(model => model.ColuCode, new { @value = Model.ColuCode })
+                                        @Html.DropDownListFor(model => model.Messages.ColuCode, new SelectList(ViewBag.countryList, "Value", "Text", Model.Messages.ColuCode), "Select Country", new { @class = "form-control", @disabled = "disabled" })
+                                        @Html.HiddenFor(model => model.Messages.ColuCode, new { @value = Model.Messages.ColuCode })
                                     </div>
                                 </div>
                             </div>
@@ -124,148 +127,148 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.FileDirectionCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.FileDirectionCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.DropDownListFor(model => model.FileDirectionCode, new SelectList(ViewBag.fileDirectionList, "Value", "Text"), "Select File Direction", new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.FileDirectionCode, "", new { @class = "text-danger" })
+                                                @Html.DropDownListFor(model => model.Messages.FileDirectionCode, new SelectList(ViewBag.fileDirectionList, "Value", "Text"), "Select File Direction", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Messages.FileDirectionCode, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.FileType, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.FileType, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.DropDownListFor(model => model.FileType, new SelectList(ViewBag.fileTypeList, "Value", "Text"), "Select File Type", new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.FileType, "", new { @class = "text-danger" })
+                                                @Html.DropDownListFor(model => model.Messages.FileType, new SelectList(ViewBag.fileTypeList, "Value", "Text"), "Select File Type", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Messages.FileType, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.Counter, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.Counter, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.EditorFor(model => model.Counter, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.Counter, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.Counter, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.Counter, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.StartReadWrite, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.StartReadWrite, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.EditorFor(model => model.StartReadWrite, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.StartReadWrite, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.StartReadWrite, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.StartReadWrite, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.DelLinePattern, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.DelLinePattern, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.EditorFor(model => model.DelLinePattern, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.DelLinePattern, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.DelLinePattern, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.DelLinePattern, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.CodePageId, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.CodePageId, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.DropDownListFor(model => model.CodePageId, new SelectList(ViewBag.codePageList, "Value", "Text", 1252), "Select Code Page", new { @class = "form-control", @disabled = "disabled" })
-                                                @Html.HiddenFor(model => model.CodePageId, new { @value = 1252 })
+                                                @Html.DropDownListFor(model => model.Messages.CodePageId, new SelectList(ViewBag.codePageList, "Value", "Text", 1252), "Select Code Page", new { @class = "form-control", @disabled = "disabled" })
+                                                @Html.HiddenFor(model => model.Messages.CodePageId, new { @value = 1252 })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.IsDebug, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.IsDebug, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-8">
-                                                @Html.EditorFor(model => model.IsDebug, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.IsDebug, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.IsDebug, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.IsDebug, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.FileNameConvention, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.FileNameConvention, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.FileNameConvention, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.FileNameConvention, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.FileNameConvention, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.FileNameConvention, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.FileNameExtension, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.FileNameExtension, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.FileNameExtension, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.FileNameExtension, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.FileNameExtension, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.FileNameExtension, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.FileNameDateFormat, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.FileNameDateFormat, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.DropDownListFor(model => model.FileNameDateFormat, new SelectList(ViewBag.dateTypeList, "Value", "Text"), "Select Date Type", new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.FileNameDateFormat, "", new { @class = "text-danger" })
+                                                @Html.DropDownListFor(model => model.Messages.FileNameDateFormat, new SelectList(ViewBag.dateTypeList, "Value", "Text"), "Select Date Type", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Messages.FileNameDateFormat, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.XmlNode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.XmlNode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.XmlNode, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.XmlNode, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.XmlNode, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.XmlNode, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.ExcelTemplatePath, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.ExcelTemplatePath, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.ExcelTemplatePath, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.ExcelTemplatePath, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.ExcelTemplatePath, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.ExcelTemplatePath, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.ExcelRowOffset, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.ExcelRowOffset, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.ExcelRowOffset, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.ExcelRowOffset, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.ExcelRowOffset, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.ExcelRowOffset, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.ExcelXMLTableNo, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.ExcelXMLTableNo, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.ExcelXMLTableNo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                                @Html.ValidationMessageFor(model => model.ExcelXMLTableNo, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.ExcelXMLTableNo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.ExcelXMLTableNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.TemporaryFileExtension, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.TemporaryFileExtension, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.TemporaryFileExtension, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.TemporaryFileExtension, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.TemporaryFileExtension, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.TemporaryFileExtension, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.IsUseTemporaryExtension, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                @Html.LabelFor(model => model.Messages.IsUseTemporaryExtension, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                             </div>
                                             <div class="col-xs-6">
-                                                @Html.EditorFor(model => model.IsUseTemporaryExtension, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.IsUseTemporaryExtension, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Messages.IsUseTemporaryExtension, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Messages.IsUseTemporaryExtension, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -273,7 +276,66 @@
                             </div>
                         </div>
                         <div id="MessageSettings" class="tab-pane fade">
-                            MessageSettings
+                            <div class="container">
+                                <div class="row" style="width:94%;">
+                                    
+                                    <p>
+                                        <input class="btn btn-link btn-md" type="submit" id="btnSaveMset" name="save" value="Create Message Setting" />
+                                    </p>
+
+                                    <table class="table" id="tblMessageSettings">
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.MessageSettings.MsgCode)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.MessageSettings.ERP)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.MessageSettings.PRNCPL)
+                                            </th>
+                                            <th></th>
+                                        </tr>
+
+                                        @foreach (var item in Model.ListMessageSettings)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.MsgCode)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.PRNCPL)
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                            id="btnEdit"
+                                                            class="btn btn-link btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#dvMessageSettings"
+                                                            href="@Html.Raw(Url.Action("EditMessageSettings", "Maintenance", new { msgCode = item.MsgCode, erp = item.ERP }))">
+                                                        Edit
+                                                    </button> |
+                                                    <button type="button"
+                                                            id="btnDelete"
+                                                            class="btn btn-link btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#dvDeleteConfirmation"
+                                                            data-record-id=@item.MsetID
+                                                            data-message-code=@item.MsgCode
+                                                            data-file-type=@item.FileType>
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+
+                                </div>
+                            </div>
                         </div>
                         <div id="RunSettings" class="tab-pane fade">
                             <div class="container">
@@ -281,41 +343,41 @@
                                     <fieldset class="scheduler-border">
                                         <legend class="scheduler-border">Run Days</legend>
                                         <div class="form-inline">
-                                            @Html.EditorFor(model => model.MondayFlag)
-                                            @Html.LabelFor(model => model.MondayFlag, new { @class = "label-padding" })
-                                            @Html.EditorFor(model => model.TuesdayFlag)
-                                            @Html.LabelFor(model => model.TuesdayFlag, new { @class = "label-padding" })
-                                            @Html.EditorFor(model => model.WednesdayFlag)
-                                            @Html.LabelFor(model => model.WednesdayFlag, new { @class = "label-padding" })
-                                            @Html.EditorFor(model => model.ThursdayFlag)
-                                            @Html.LabelFor(model => model.ThursdayFlag, new { @class = "label-padding" })
-                                            @Html.EditorFor(model => model.FridayFlag)
-                                            @Html.LabelFor(model => model.FridayFlag, new { @class = "label-padding" })
-                                            @Html.EditorFor(model => model.SaturdayFlag)
-                                            @Html.LabelFor(model => model.SaturdayFlag, new { @class = "label-padding" })
-                                            @Html.EditorFor(model => model.SundayFlag)
-                                            @Html.LabelFor(model => model.SundayFlag)
+                                            @Html.EditorFor(model => model.Messages.MondayFlag)
+                                            @Html.LabelFor(model => model.Messages.MondayFlag, new { @class = "label-padding" })
+                                            @Html.EditorFor(model => model.Messages.TuesdayFlag)
+                                            @Html.LabelFor(model => model.Messages.TuesdayFlag, new { @class = "label-padding" })
+                                            @Html.EditorFor(model => model.Messages.WednesdayFlag)
+                                            @Html.LabelFor(model => model.Messages.WednesdayFlag, new { @class = "label-padding" })
+                                            @Html.EditorFor(model => model.Messages.ThursdayFlag)
+                                            @Html.LabelFor(model => model.Messages.ThursdayFlag, new { @class = "label-padding" })
+                                            @Html.EditorFor(model => model.Messages.FridayFlag)
+                                            @Html.LabelFor(model => model.Messages.FridayFlag, new { @class = "label-padding" })
+                                            @Html.EditorFor(model => model.Messages.SaturdayFlag)
+                                            @Html.LabelFor(model => model.Messages.SaturdayFlag, new { @class = "label-padding" })
+                                            @Html.EditorFor(model => model.Messages.SundayFlag)
+                                            @Html.LabelFor(model => model.Messages.SundayFlag)
                                         </div>
                                     </fieldset>
                                     <fieldset>
-                                        <legend>@Html.EditorFor(model => model.ManualRunFlag) Run Time</legend>
+                                        <legend>@Html.EditorFor(model => model.Messages.ManualRunFlag) Run Time</legend>
                                         <div class="form-inline">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.StartRuntime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.Messages.StartRuntime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.StartRuntime, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.StartRuntime, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.Messages.StartRuntime, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Messages.StartRuntime, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                             <div class="form-group" style="margin-left:30px;">
                                                 <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.EndRuntime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                                    @Html.LabelFor(model => model.Messages.EndRuntime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                                 </div>
                                                 <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.EndRuntime, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.EndRuntime, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.Messages.EndRuntime, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Messages.EndRuntime, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
@@ -327,8 +389,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input class="btn btn-success btn-md" type="submit" id="btnSave" name="Save" value="Create message" />
+                <input class="btn btn-success btn-md" type="submit" id="btnSave" name="save" value="Create Message" />
                 <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
+                @Html.Hidden("isNew", true)
             </div>
         </div>
     </div>
@@ -338,11 +401,10 @@
     $(function () {
         $("#divValidationSummary").hide();
     });
-   
+
     function GetResult(response) {
         jsonResult = JSON.parse(response);
-        if (jsonResult.result == "ERROR")
-        {
+        if (jsonResult.result == "ERROR") {
             $("#divValidationSummary").show();
             $("#lstValidationSummary").html("");
             for (var i = 0; i < jsonResult.errorlist.length; i++) {
@@ -350,18 +412,27 @@
             }
         }
         else {
-            $('#dvCreateMessage').modal('hide');
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
+            if (jsonResult.message == "Create Message") {
+                $('#dvCreateMessage').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
 
-            $.ajax({
-                url: '@Url.Action("GetMessagesPerTradingPartner", "Maintenance", new { trdpCode = Model.TradingPartnercode })',
-                type: 'GET',
-                cache: false,
-                success: function (result) {
-                    $('#MessagesList').html(result);
-                }
-            });
+                $.ajax({
+                    url: '@Url.Action("GetMessagesPerTradingPartner", "Maintenance", new { trdpCode = Model.Messages.TradingPartnercode })',
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        $('#MessagesList').html(result);
+                    }
+                });
+            }
+            else if (jsonResult.message == "Create Message Setting") {
+                $("#isNew").val(false);
+                $('#dvMessageSettings').modal('show');
+                $("#MsgCode").val(jsonResult.msgCode);
+                $("#FileType").val($("#Messages_FileType").val());
+                
+            }
         }
     };
 

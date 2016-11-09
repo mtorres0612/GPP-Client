@@ -35,10 +35,30 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create Message Setting</h4>
                 </div>
                 <div class="modal-body">
+                    @{ Html.RenderAction("CreateMessageSettings", "Maintenance"); }
                 </div>
                 <div class="modal-footer">
+                    @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dvDeleteConfirmation" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    Delete message setting?
+                    <span id="spanDetails"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnConfirmDelete">Delete</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -140,6 +160,32 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
         $('body').on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
+        });
+
+        $('#dvDeleteConfirmation').on('show.bs.modal', function (e) {
+            var data = $(e.relatedTarget).data();
+
+            $("#btnConfirmDelete", this).data("recordId", data.recordId);
+            $("#btnConfirmDelete", this).data("messageCode", data.messageCode);
+            $("#btnConfirmDelete", this).data("fileType", data.fileType);
+
+        });
+
+        $("#btnConfirmDelete").click(function () {
+            var id = $(this).data("recordId");
+            var msgCode = $(this).data("messageCode");
+            var fileType = $(this).data("fileType");
+            $.ajax(
+                {
+                    url: '@Url.Action("DeleteMessageSettings", "Maintenance")',
+                    type: 'POST',
+                    data: { "id": id, "msgCode": msgCode, "fileType": fileType },
+                    success: function (data) {
+                        $("#MessageSettings .container .row").html("");
+                        $("#MessageSettings .container .row").html(data);
+                        $('#dvDeleteConfirmation').modal('hide');
+                    }
+                });
         });
     });
 </script>

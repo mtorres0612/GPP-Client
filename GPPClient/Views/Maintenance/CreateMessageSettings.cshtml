@@ -1,5 +1,4 @@
-﻿
-@model GPPClientModel.MessageSettings
+﻿@model GPPClientModel.MessageSettings
 
 @{
     Layout = null;
@@ -40,862 +39,852 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Create Message Settings</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-horizontal">
+    <div class="form-horizontal">
 
-                    <script>
-                        $(function(){
-                            $('#MsetBatchTimeString, #MsetStartTimeString, #MsetEndTimeString').timepicker({
-                                minuteStep: 1,
-                                secondStep: 5,
-                                showInputs: true,
-                                modalBackdrop: true,
-                                showSeconds: true,
-                                showMeridian: true
-                            });
-                        })
-                    </script>
+        <script>
+            $(function () {
+                $('#MsetBatchTimeString, #MsetStartTimeString, #MsetEndTimeString').timepicker({
+                    minuteStep: 1,
+                    secondStep: 5,
+                    showInputs: true,
+                    modalBackdrop: true,
+                    showSeconds: true,
+                    showMeridian: true
+                });
+            })
+        </script>
 
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-                        <div class="form-horizontal">
+            <div class="form-horizontal">
 
-                            @Html.ValidationSummary(false)
-                            <div class="alert alert-danger" id="divMsetValidationSummary">
-                                <strong>Error saving message settings.</strong> Details:
-                                <ul id="lstMsetValidationSummary"></ul>
+                @Html.ValidationSummary(false)
+                <div class="alert alert-danger" id="divMsetValidationSummary">
+                    <strong>Error saving message settings.</strong> Details:
+                    <ul id="lstMsetValidationSummary"></ul>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="col-xs-2">
+                                @Html.LabelFor(model => model.MsgCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                             </div>
-
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="form-group">
-                                        <div class="col-xs-2">
-                                            @Html.LabelFor(model => model.MsgCode, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-10">
-                                            @Html.EditorFor(model => model.MsgCode, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                            @Html.ValidationMessageFor(model => model.MsgCode, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <div class="col-xs-4">
-                                            @Html.LabelFor(model => model.ERP, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-8">
-                                            @Html.DropDownListFor(model => model.ERP, new SelectList(ViewBag.erpList, "Value", "Text"), "Select ERP", new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.ERP, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <div class="col-xs-2">
-                                            @Html.LabelFor(model => model.PRNCPL, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-10">
-                                            @Html.DropDownList("PRNCPL", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.PRNCPL, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12">
-                                    <div class="form-group">
-                                        <div class="col-xs-2">
-                                            @Html.LabelFor(model => model.BackUpFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-10">
-                                            @Html.EditorFor(model => model.BackUpFolder, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.BackUpFolder, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <div class="col-xs-4">
-                                            @Html.LabelFor(model => model.SourceFileMask, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-8">
-                                            @Html.EditorFor(model => model.SourceFileMask, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.SourceFileMask, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-inline">
-                                        @Html.RadioButton("rdoStatus", Model.FilesSentStatusSingle, Model.FilesSentStatusSingle, new { @id = "FilesSentStatusSingle" })
-                                        @Html.LabelFor(model => model.FilesSentStatusSingle, new { @class = "label-padding" })
-                                        @Html.RadioButton("rdoStatus", Model.FilesSentStatusSingle, Model.FilesSentStatusBatch, new { @id = "FilesSentStatusBatch" })
-                                        @Html.LabelFor(model => model.FilesSentStatusBatch, new { @class = "label-padding" })
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <div class="col-xs-4">
-                                            @Html.LabelFor(model => model.FITEMask, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-8">
-                                            @Html.EditorFor(model => model.FITEMask, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.FITEMask, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-inline">
-                                        <span id="dvMsetMaxThreadCount">
-                                            @Html.LabelFor(model => model.MsetMaxThreadCount)
-                                            @Html.EditorFor(model => model.MsetMaxThreadCount, new { htmlAttributes = new { @class = "form-control" } })
-                                        </span>
-                                        @Html.LabelFor(model => model.Retention)
-                                        @Html.DropDownListFor(model => model.Retention, new SelectList(ViewBag.retentionList, "Value", "Text"), new { @class = "form-control" })
-                                    </div>
-                                </div>
-                                @*<div class="col-xs-2">
-                                        <div class="form-group">
-                                            <div class="col-xs-4">
-                                                @Html.LabelFor(model => model.Retention, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                            </div>
-                                            <div class="col-xs-8">
-                                                @Html.DropDownListFor(model => model.Retention, new SelectList(ViewBag.retentionList, "Value", "Text"), new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.Retention, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </div>*@
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-2">
-                                    <div class="form-group">
-                                        <div class="col-xs-3">
-                                            @Html.LabelFor(model => model.MsetFilePickupDelay, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-9">
-                                            @Html.DropDownListFor(model => model.MsetFilePickupDelay, new SelectList(ViewBag.delayList, "Value", "Text"), new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.MsetFilePickupDelay, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-2">
-                                    <div class="form-group">
-                                        <div class="col-xs-7">
-                                            @Html.LabelFor(model => model.IsZipSource, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                        </div>
-                                        <div class="col-xs-5">
-                                            @Html.EditorFor(model => model.IsZipSource, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.IsZipSource, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-8">
-                                    <fieldset class="fieldset-auto-width">
-                                        <legend>@Html.EditorFor(model => model.IsZip) @Html.LabelFor(model => model.IsZip)</legend>
-                                        <div class="form-inline">
-                                            <div class="form-group">
-                                                <div class="col-xs-3">
-                                                    @Html.LabelFor(model => model.ZipPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.ZipPassword, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.ZipPassword, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-xs-5">
-                                                    @Html.Label("ConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-7">
-                                                    @Html.TextBox("ConfirmPassword", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <fieldset class="fieldset-auto-width">
-                                        <legend>@Html.EditorFor(model => model.MsetBatchRun) Batch</legend>
-                                        <div class="form-group">
-                                            <div class="col-xs-3">
-                                                @Html.LabelFor(model => model.MsetBatchTime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                            </div>
-                                            <div class="col-xs-9">
-                                                @Html.EditorFor(model => model.MsetBatchTimeString, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.HiddenFor(model => model.MsetBatchTime, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.MsetBatchTimeString, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                                <div class="col-xs-9">
-                                    <fieldset class="fieldset-auto-width form-inline">
-                                        <legend>@Html.EditorFor(model => model.MsetRunTime) Run Time</legend>
-
-                                        @Html.LabelFor(model => model.MsetStartTime, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.MsetStartTimeString, new { htmlAttributes = new { @class = "form-control", @style = "width: 130px;margin-right: 30px" } })
-                                        @Html.HiddenFor(model => model.MsetStartTime, htmlAttributes: new { @class = "control-label" })
-                                        @Html.ValidationMessageFor(model => model.MsetStartTimeString, "", new { @class = "text-danger" })
-
-                                        @Html.LabelFor(model => model.MsetEndTime, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.MsetEndTimeString, new { htmlAttributes = new { @class = "form-control", @style = "width: 130px;margin-right: 30px" } })
-                                        @Html.HiddenFor(model => model.MsetEndTime, htmlAttributes: new { @class = "control-label" })
-                                        @Html.ValidationMessageFor(model => model.MsetEndTimeString, "", new { @class = "text-danger" })
-
-                                        @Html.LabelFor(model => model.MsetInterval, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.MsetInterval, new { htmlAttributes = new { @class = "form-control", @style = "width: 100px;margin-right: 30px" } })
-                                        @Html.ValidationMessageFor(model => model.MsetInterval, "", new { @class = "text-danger" })
-                                    </fieldset>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <fieldset class="fieldset-auto-width">
-                                        <legend>@Html.EditorFor(model => model.FileConvertionFlag) @Html.LabelFor(model => model.FileConvertionFlag)</legend>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-3">
-                                                    @Html.LabelFor(model => model.SourceCodePage, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-9">
-                                                    @Html.DropDownListFor(model => model.SourceCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text"), new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.SourceCodePage, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-3">
-                                                    @Html.LabelFor(model => model.DestinationCodePage, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-9">
-                                                    @Html.DropDownListFor(model => model.DestinationCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text", 65001), new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.DestinationCodePage, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <fieldset class="fieldset-auto-width">
-                                        <legend>Message File Source</legend>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.MessageFileSource.TransmissionTypeID, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.DropDownListFor(model => model.MessageFileSource.TransmissionTypeID, new SelectList(ViewBag.transTypeSourceList, "Value", "Text"), "Select Transmission Type", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.MessageFileSource.TransmissionTypeID, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("SourceUsername", "Username", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @*@Html.TextBox("SourceUsername", string.Empty, new { @class = "form-control" })*@
-                                                    @Html.EditorFor(model => model.SourceUserName, new { htmlAttributes = new { @class = "form-control" } })
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("SourceAddress", "IP Address", htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblSourceAddress" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.TextBox("SourceAddress", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("SourcePassword", "Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.Password("SourcePassword", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("SourceFolder", "Folder", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.TextBox("SourceFolder", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("SourceConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.Password("SourceConfirmPassword", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <fieldset class="fieldset-auto-width">
-                                        <legend>Message File Destination</legend>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.MessageFileDestination.TransmissionTypeID, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.DropDownListFor(model => model.MessageFileDestination.TransmissionTypeID, new SelectList(ViewBag.transTypeDestinationList, "Value", "Text"), "Select Transmission Type", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.MessageFileDestination.TransmissionTypeID, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("DestinationUsername", "Username", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationUsername", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("DestinationAddress", "IP Address", htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblDestinationAddress" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationAddress", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("DestinationPassword", "Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.Password("DestinationPassword", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("DestinationFolder", "Folder", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationFolder", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("DestinationConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.Password("DestinationConfirmPassword", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                @Html.EditorFor(model => model.SendSuccessNotification)
-                                                @Html.LabelFor(model => model.SendSuccessNotification, new { @class = "label-padding" })
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.Label("DestinationPort", "Port", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.TextBox("DestinationPort", string.Empty, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-
-                                        </div>
-                                        <div class="col-xs-6">
-                                            @*<input class="btn btn-success btn-md" type="button" id="btnEmailDistList" value="Email Distribution List" />*@
-
-                                            <button type="button"
-                                                    id="btnEmailDistList"
-                                                    class="btn btn-primary btn-md"
-                                                    data-toggle="modal"
-                                                    data-target="#dvEmailDistList"
-                                                    href="@Html.Raw(Url.Action("EditEmailDistributionList", "Maintenance", new { msgCode = @Model.MsgCode, erp = @Model.ERP }))">
-                                                Email Distribution List
-                                            </button>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <fieldset class="fieldset-auto-width">
-                                        <legend>Settings</legend>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.BackUpFolderOut, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.BackUpFolderOut, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.BackUpFolderOut, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.FtpServerIP, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.FtpServerIP, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.FtpServerIP, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.NoMappingFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.NoMappingFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.NoMappingFolder, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.FtpPort, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.FtpPort, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.FtpPort, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.NoFTPSettingsFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.NoFTPSettingsFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.NoFTPSettingsFolder, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.FtpFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.FtpFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.FtpFolder, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.NotValidFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.NotValidFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.NotValidFolder, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.FtpUserName, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.FtpUserName, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.FtpUserName, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.FtpPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.FtpPassword, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.FtpPassword, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <div class="col-xs-4">
-                                                    @Html.LabelFor(model => model.FtpBeforePutCmd, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    @Html.EditorFor(model => model.FtpBeforePutCmd, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.FtpBeforePutCmd, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
+                            <div class="col-xs-10">
+                                @Html.EditorFor(model => model.MsgCode, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                @Html.ValidationMessageFor(model => model.MsgCode, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                    }
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.LabelFor(model => model.ERP, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(model => model.ERP, new SelectList(ViewBag.erpList, "Value", "Text"), "Select ERP", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERP, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="col-xs-2">
+                                @Html.LabelFor(model => model.PRNCPL, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-10">
+                                @Html.DropDownList("PRNCPL", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PRNCPL, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="col-xs-2">
+                                @Html.LabelFor(model => model.BackUpFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-10">
+                                @Html.EditorFor(model => model.BackUpFolder, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BackUpFolder, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.LabelFor(model => model.SourceFileMask, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-8">
+                                @Html.EditorFor(model => model.SourceFileMask, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.SourceFileMask, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-inline">
+                            @Html.RadioButton("rdoStatus", Model.FilesSentStatusSingle, Model.FilesSentStatusSingle, new { @id = "FilesSentStatusSingle" })
+                            @Html.LabelFor(model => model.FilesSentStatusSingle, new { @class = "label-padding" })
+                            @Html.RadioButton("rdoStatus", Model.FilesSentStatusSingle, Model.FilesSentStatusBatch, new { @id = "FilesSentStatusBatch" })
+                            @Html.LabelFor(model => model.FilesSentStatusBatch, new { @class = "label-padding" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.LabelFor(model => model.FITEMask, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-8">
+                                @Html.EditorFor(model => model.FITEMask, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.FITEMask, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-inline">
+                            <span id="dvMsetMaxThreadCount">
+                                @Html.LabelFor(model => model.MsetMaxThreadCount)
+                                @Html.EditorFor(model => model.MsetMaxThreadCount, new { htmlAttributes = new { @class = "form-control" } })
+                            </span>
+                            @Html.LabelFor(model => model.Retention)
+                            @Html.DropDownListFor(model => model.Retention, new SelectList(ViewBag.retentionList, "Value", "Text"), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    @*<div class="col-xs-2">
+                            <div class="form-group">
+                                <div class="col-xs-4">
+                                    @Html.LabelFor(model => model.Retention, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                </div>
+                                <div class="col-xs-8">
+                                    @Html.DropDownListFor(model => model.Retention, new SelectList(ViewBag.retentionList, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Retention, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-2">
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                @Html.LabelFor(model => model.MsetFilePickupDelay, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-9">
+                                @Html.DropDownListFor(model => model.MsetFilePickupDelay, new SelectList(ViewBag.delayList, "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.MsetFilePickupDelay, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="form-group">
+                            <div class="col-xs-7">
+                                @Html.LabelFor(model => model.IsZipSource, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                            </div>
+                            <div class="col-xs-5">
+                                @Html.EditorFor(model => model.IsZipSource, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.IsZipSource, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-8">
+                        <fieldset class="fieldset-auto-width">
+                            <legend>@Html.EditorFor(model => model.IsZip) @Html.LabelFor(model => model.IsZip)</legend>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <div class="col-xs-3">
+                                        @Html.LabelFor(model => model.ZipPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.ZipPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ZipPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-5">
+                                        @Html.Label("ConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-7">
+                                        @Html.TextBox("ConfirmPassword", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-3">
+                        <fieldset class="fieldset-auto-width">
+                            <legend>@Html.EditorFor(model => model.MsetBatchRun) Batch</legend>
+                            <div class="form-group">
+                                <div class="col-xs-3">
+                                    @Html.LabelFor(model => model.MsetBatchTime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                </div>
+                                <div class="col-xs-9">
+                                    @Html.EditorFor(model => model.MsetBatchTimeString, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.HiddenFor(model => model.MsetBatchTime, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.MsetBatchTimeString, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xs-9">
+                        <fieldset class="fieldset-auto-width form-inline">
+                            <legend>@Html.EditorFor(model => model.MsetRunTime) Run Time</legend>
+
+                            @Html.LabelFor(model => model.MsetStartTime, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.MsetStartTimeString, new { htmlAttributes = new { @class = "form-control", @style = "width: 130px;margin-right: 30px" } })
+                            @Html.HiddenFor(model => model.MsetStartTime, htmlAttributes: new { @class = "control-label" })
+                            @Html.ValidationMessageFor(model => model.MsetStartTimeString, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.MsetEndTime, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.MsetEndTimeString, new { htmlAttributes = new { @class = "form-control", @style = "width: 130px;margin-right: 30px" } })
+                            @Html.HiddenFor(model => model.MsetEndTime, htmlAttributes: new { @class = "control-label" })
+                            @Html.ValidationMessageFor(model => model.MsetEndTimeString, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.MsetInterval, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.MsetInterval, new { htmlAttributes = new { @class = "form-control", @style = "width: 100px;margin-right: 30px" } })
+                            @Html.ValidationMessageFor(model => model.MsetInterval, "", new { @class = "text-danger" })
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset class="fieldset-auto-width">
+                            <legend>@Html.EditorFor(model => model.FileConvertionFlag) @Html.LabelFor(model => model.FileConvertionFlag)</legend>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-3">
+                                        @Html.LabelFor(model => model.SourceCodePage, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-9">
+                                        @Html.DropDownListFor(model => model.SourceCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text"), new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.SourceCodePage, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-3">
+                                        @Html.LabelFor(model => model.DestinationCodePage, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-9">
+                                        @Html.DropDownListFor(model => model.DestinationCodePage, new SelectList(ViewBag.fileEncodingList, "Value", "Text", 65001), new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DestinationCodePage, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset class="fieldset-auto-width">
+                            <legend>Message File Source</legend>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.MessageFileSource.TransmissionTypeID, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.DropDownListFor(model => model.MessageFileSource.TransmissionTypeID, new SelectList(ViewBag.transTypeSourceList, "Value", "Text"), "Select Transmission Type", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.MessageFileSource.TransmissionTypeID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("SourceUsername", "Username", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @*@Html.TextBox("SourceUsername", string.Empty, new { @class = "form-control" })*@
+                                        @Html.EditorFor(model => model.SourceUserName, new { htmlAttributes = new { @class = "form-control" } })
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("SourceAddress", "IP Address", htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblSourceAddress" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.TextBox("SourceAddress", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("SourcePassword", "Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.Password("SourcePassword", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("SourceFolder", "Folder", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.TextBox("SourceFolder", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("SourceConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.Password("SourceConfirmPassword", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset class="fieldset-auto-width">
+                            <legend>Message File Destination</legend>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.MessageFileDestination.TransmissionTypeID, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.DropDownListFor(model => model.MessageFileDestination.TransmissionTypeID, new SelectList(ViewBag.transTypeDestinationList, "Value", "Text"), "Select Transmission Type", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.MessageFileDestination.TransmissionTypeID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("DestinationUsername", "Username", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.TextBox("DestinationUsername", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("DestinationAddress", "IP Address", htmlAttributes: new { @class = "control-label col-md-2 modal-label", @id = "lblDestinationAddress" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.TextBox("DestinationAddress", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("DestinationPassword", "Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.Password("DestinationPassword", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("DestinationFolder", "Folder", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.TextBox("DestinationFolder", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("DestinationConfirmPassword", "Confirm Password", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.Password("DestinationConfirmPassword", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.SendSuccessNotification)
+                                    @Html.LabelFor(model => model.SendSuccessNotification, new { @class = "label-padding" })
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.Label("DestinationPort", "Port", htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.TextBox("DestinationPort", string.Empty, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+
+                            </div>
+                            <div class="col-xs-6">
+                                @*<input class="btn btn-success btn-md" type="button" id="btnEmailDistList" value="Email Distribution List" />*@
+
+                                <button type="button"
+                                        id="btnEmailDistList"
+                                        class="btn btn-primary btn-md"
+                                        data-toggle="modal"
+                                        data-target="#dvEmailDistList"
+                                        href="@Html.Raw(Url.Action("EditEmailDistributionList", "Maintenance", new { msgCode = @Model.MsgCode, erp = @Model.ERP }))">
+                                    Email Distribution List
+                                </button>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset class="fieldset-auto-width">
+                            <legend>Settings</legend>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.BackUpFolderOut, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.BackUpFolderOut, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.BackUpFolderOut, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.FtpServerIP, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.FtpServerIP, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.FtpServerIP, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.NoMappingFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.NoMappingFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.NoMappingFolder, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.FtpPort, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.FtpPort, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.FtpPort, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.NoFTPSettingsFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.NoFTPSettingsFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.NoFTPSettingsFolder, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.FtpFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.FtpFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.FtpFolder, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.NotValidFolder, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.NotValidFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.NotValidFolder, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.FtpUserName, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.FtpUserName, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.FtpUserName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.FtpPassword, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.FtpPassword, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.FtpPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        @Html.LabelFor(model => model.FtpBeforePutCmd, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
+                                    </div>
+                                    <div class="col-xs-8">
+                                        @Html.EditorFor(model => model.FtpBeforePutCmd, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
+                                        @Html.ValidationMessageFor(model => model.FtpBeforePutCmd, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <input class="btn btn-success btn-md" type="submit" id="btnSave" name="Save" value="Save Message Settings" />
-                <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
 
-                <span>
-                    @Html.HiddenFor(model => model.FileType, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.HiddenFor(model => model.MsetID, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.HiddenFor(model => model.MessageFileSourceId, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.HiddenFor(model => model.MessageFileDestinationId, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.EditorFor(model => model.User, new { htmlAttributes = new { @class = "form-control hidden" } })
-                </span>
-            </div>
-        </div>
+    <input class="btn btn-success btn-md" type="submit" id="btnSave" name="Save" value="Save Message Settings" />
+    <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
+
+    <span>
+        @Html.HiddenFor(model => model.FileType, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.HiddenFor(model => model.MsetID, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.HiddenFor(model => model.MessageFileSourceId, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.HiddenFor(model => model.MessageFileDestinationId, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.EditorFor(model => model.User, new { htmlAttributes = new { @class = "form-control hidden" } })
+    </span>
+        }
     </div>
-
-
 }
 
 <script>
-    $(function () {
+            $(function () {
 
-        var zipEnabled, runTimeEnabled, conventionEnabled;
+                var zipEnabled, runTimeEnabled, conventionEnabled;
 
-        $("#divMsetValidationSummary").hide();
+                $("#divMsetValidationSummary").hide();
 
-        zipEnabled = $("#IsZip").is(":checked");
-        runTimeEnabled = $("#MsetRunTime").is(":checked");
-        conventionEnabled = $("#FileConvertionFlag").is(":checked");
+                zipEnabled = $("#IsZip").is(":checked");
+                runTimeEnabled = $("#MsetRunTime").is(":checked");
+                conventionEnabled = $("#FileConvertionFlag").is(":checked");
 
-        $('#ZipPassword, #ConfirmPassword').attr("readonly", !zipEnabled);
-        $('#MsetStartTimeString, #MsetEndTimeString, #MsetInterval').attr("readonly", !runTimeEnabled);
-        $('#SourceCodePage, #DestinationCodePage').attr("readonly", !conventionEnabled);
+                $('#ZipPassword, #ConfirmPassword').attr("readonly", !zipEnabled);
+                $('#MsetStartTimeString, #MsetEndTimeString, #MsetInterval').attr("readonly", !runTimeEnabled);
+                $('#SourceCodePage, #DestinationCodePage').attr("readonly", !conventionEnabled);
 
-        FillData();
+                FillData();
 
-        $("#ERP").change(function () {
-            PopulatePrincipal($(this).val());
-        });
+                $("#ERP").change(function () {
+                    PopulatePrincipal($(this).val());
+                });
 
-        $("#FilesSentStatusSingle").click(function () {
-            $("#dvMsetMaxThreadCount").show();
-        });
+                $("#FilesSentStatusSingle").click(function () {
+                    $("#dvMsetMaxThreadCount").show();
+                });
 
-        $("#FilesSentStatusBatch").click(function () {
-            $("#dvMsetMaxThreadCount").hide();
-        });
+                $("#FilesSentStatusBatch").click(function () {
+                    $("#dvMsetMaxThreadCount").hide();
+                });
 
-        $("#IsZip").click(function () {
-            zipEnabled = $(this).is(":checked");
-            $('#ZipPassword, #ConfirmPassword').attr("readonly", !zipEnabled);
-        });
+                $("#IsZip").click(function () {
+                    zipEnabled = $(this).is(":checked");
+                    $('#ZipPassword, #ConfirmPassword').attr("readonly", !zipEnabled);
+                });
 
-        $("#MsetRunTime").click(function () {
-            runTimeEnabled = $(this).is(":checked");
-            $('#MsetStartTimeString, #MsetEndTimeString, #MsetInterval').attr("readonly", !runTimeEnabled);
-        });
+                $("#MsetRunTime").click(function () {
+                    runTimeEnabled = $(this).is(":checked");
+                    $('#MsetStartTimeString, #MsetEndTimeString, #MsetInterval').attr("readonly", !runTimeEnabled);
+                });
 
-        $("#FileConvertionFlag").click(function () {
-            conventionEnabled = $(this).is(":checked");
-            $('#SourceCodePage, #DestinationCodePage').attr("readonly", !conventionEnabled);
-        });
+                $("#FileConvertionFlag").click(function () {
+                    conventionEnabled = $(this).is(":checked");
+                    $('#SourceCodePage, #DestinationCodePage').attr("readonly", !conventionEnabled);
+                });
 
-        $("#MessageFileSource_TransmissionTypeID").change(function () {
+                $("#MessageFileSource_TransmissionTypeID").change(function () {
 
-            var transType = $("#MessageFileSource_TransmissionTypeID option:selected").text();
-            $("#SourceUsername, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
-            FillMessageSourceDetails(transType);
-        });
+                    var transType = $("#MessageFileSource_TransmissionTypeID option:selected").text();
+                    $("#SourceUsername, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
+                    FillMessageSourceDetails(transType);
+                });
 
-        $("#MessageFileDestination_TransmissionTypeID").change(function () {
+                $("#MessageFileDestination_TransmissionTypeID").change(function () {
 
-            var transType = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
-            $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
-            FillMessageDestinationDetails(transType);
-        });
+                    var transType = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
+                    $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
+                    FillMessageDestinationDetails(transType);
+                });
 
-        function FillData()
-        {
-            PopulatePrincipal($("#ERP").val());
+                function FillData() {
+                    PopulatePrincipal($("#ERP").val());
 
-            var transTypeSrc = $("#MessageFileSource_TransmissionTypeID option:selected").text();
-            $("#SourceUsername, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
-            FillMessageSourceDetails(transTypeSrc);
+                    var transTypeSrc = $("#MessageFileSource_TransmissionTypeID option:selected").text();
+                    $("#SourceUsername, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
+                    FillMessageSourceDetails(transTypeSrc);
 
-            var transTypeDest = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
-            $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
-            FillMessageDestinationDetails(transTypeDest);
-        }
+                    var transTypeDest = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
+                    $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
+                    FillMessageDestinationDetails(transTypeDest);
+                }
 
-        function FillMessageSourceDetails(transType)
-        {
-            if (transType == "FTP") {
-                $("#SourceFolder").show();
-                $("#lblSourceAddress").text("IP Address");
-                //GetFTPSetting(@Model.MessageFileSourceId, true);
-            }
-            else if (transType == "SFTP") {
-                $("#SourceFolder").show();
-                $("#lblSourceAddress").text("IP Address");
-                //GetSFTPSetting(@Model.MessageFileSourceId, true);
-            }
-            else if (transType == "NETWORK") {
-                $("#SourceFolder").hide();
-                $("#lblSourceAddress").text("Path");
-                //GetNetworkSetting(@Model.MessageFileSourceId, true);
-            }
-            else if (transType == "HTTP") {
-                $("#SourceFolder").hide();
-                $("#lblSourceAddress").text("URL");
-                //GetHTTPSetting(@Model.MessageFileSourceId, true);
-            }
-        }
+                function FillMessageSourceDetails(transType) {
+                    if (transType == "FTP") {
+                        $("#SourceFolder").show();
+                        $("#lblSourceAddress").text("IP Address");
+                        //GetFTPSetting(@Model.MessageFileSourceId, true);
+                    }
+                    else if (transType == "SFTP") {
+                        $("#SourceFolder").show();
+                        $("#lblSourceAddress").text("IP Address");
+                        //GetSFTPSetting(@Model.MessageFileSourceId, true);
+                    }
+                    else if (transType == "NETWORK") {
+                        $("#SourceFolder").hide();
+                        $("#lblSourceAddress").text("Path");
+                        //GetNetworkSetting(@Model.MessageFileSourceId, true);
+                    }
+                    else if (transType == "HTTP") {
+                        $("#SourceFolder").hide();
+                        $("#lblSourceAddress").text("URL");
+                        //GetHTTPSetting(@Model.MessageFileSourceId, true);
+                    }
+                }
 
-        function FillMessageDestinationDetails(transType)
-        {
-            if (transType == "FTP") {
-                $("#DestinationFolder, #DestinationPort").show();
-                $("#lblDestinationAddress").text("IP Address");
-                //GetFTPSetting(@Model.MessageFileDestinationId, false);
-            }
-            else if (transType == "SFTP") {
-                $("#DestinationFolder, #DestinationPort").show();
-                $("#lblDestinationAddress").text("IP Address");
-                //GetSFTPSetting(@Model.MessageFileDestinationId, false);
-            }
-            else if (transType == "NETWORK") {
-                $("#DestinationFolder, #DestinationPort").hide();
-                $("#lblDestinationAddress").text("Path");
-                //GetNetworkSetting(@Model.MessageFileDestinationId, false);
-            }
-            else if (transType == "HTTP") {
-                $("#DestinationFolder, #DestinationPort").hide();
-                $("#lblDestinationAddress").text("URL");
-                //GetHTTPSetting(@Model.MessageFileDestinationId, false);
-            }
-            else if (transType == "EMAIL") {
-                $("#DestinationFolder, #DestinationPort").hide();
-                $("#lblDestinationAddress").text("SMTP Server");
-                //GetSMTPSetting(@Model.MessageFileDestinationId, false);
-            }
-        }
+                function FillMessageDestinationDetails(transType) {
+                    if (transType == "FTP") {
+                        $("#DestinationFolder, #DestinationPort").show();
+                        $("#lblDestinationAddress").text("IP Address");
+                        //GetFTPSetting(@Model.MessageFileDestinationId, false);
+                    }
+                    else if (transType == "SFTP") {
+                        $("#DestinationFolder, #DestinationPort").show();
+                        $("#lblDestinationAddress").text("IP Address");
+                        //GetSFTPSetting(@Model.MessageFileDestinationId, false);
+                    }
+                    else if (transType == "NETWORK") {
+                        $("#DestinationFolder, #DestinationPort").hide();
+                        $("#lblDestinationAddress").text("Path");
+                        //GetNetworkSetting(@Model.MessageFileDestinationId, false);
+                    }
+                    else if (transType == "HTTP") {
+                        $("#DestinationFolder, #DestinationPort").hide();
+                        $("#lblDestinationAddress").text("URL");
+                        //GetHTTPSetting(@Model.MessageFileDestinationId, false);
+                    }
+                    else if (transType == "EMAIL") {
+                        $("#DestinationFolder, #DestinationPort").hide();
+                        $("#lblDestinationAddress").text("SMTP Server");
+                        //GetSMTPSetting(@Model.MessageFileDestinationId, false);
+                    }
+                }
 
-        function PopulatePrincipal(erp) {
-            $.ajax({
-                url: '@Url.Action("PopulatePrincipal", "Maintenance")',
-                type: "GET",
-                dataType: "JSON",
-                data: { 'erp': erp },
-                success: function (principalList) {
-                    $("#PRNCPL").html("");
-                    $("#PRNCPL").append($('<option></option>').val("").html("Select Principal"));
+                function PopulatePrincipal(erp) {
+                    $.ajax({
+                        url: '@Url.Action("PopulatePrincipal", "Maintenance")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { 'erp': erp },
+                        success: function (principalList) {
+                            $("#PRNCPL").html("");
+                            $("#PRNCPL").append($('<option></option>').val("").html("Select Principal"));
 
-                    $.each(principalList, function (i, item) {
-                        $("#PRNCPL").append(
-                           $('<option></option>').val(item.Value).html(item.Text));
+                            $.each(principalList, function (i, item) {
+                                $("#PRNCPL").append(
+                                   $('<option></option>').val(item.Value).html(item.Text));
 
+                            });
+                        }
                     });
                 }
-            });
-        }
 
-        function GetFTPSetting(fileTransferSettingId, isSource) {
-            $.ajax({
-                url: '@Url.Action("GetFTPSetting", "Maintenance")',
-                type: "GET",
-                dataType: "JSON",
-                data: { 'fileTransferSettingId': fileTransferSettingId },
-                success: function (data) {
-                    if (isSource) {
-                        $("#SourceUsername").val(data.ftpSettingItem.UserName);
-                        $("#SourceAddress").val(data.ftpSettingItem.IPAddress);
-                        $("#SourcePassword").val(data.ftpSettingItem.Password);
-                        $("#SourceFolder").val(data.ftpSettingItem.Folder);
-                        $("#SourceConfirmPassword").val(data.ftpSettingItem.Password);
-                    }
-                    else {
-                        $("#DestinationUsername").val(data.ftpSettingItem.UserName);
-                        $("#DestinationAddress").val(data.ftpSettingItem.IPAddress);
-                        $("#DestinationPassword").val(data.ftpSettingItem.Password);
-                        $("#DestinationFolder").val(data.ftpSettingItem.Folder);
-                        $("#DestinationConfirmPassword").val(data.ftpSettingItem.Password);
-                    }
+                function GetFTPSetting(fileTransferSettingId, isSource) {
+                    $.ajax({
+                        url: '@Url.Action("GetFTPSetting", "Maintenance")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { 'fileTransferSettingId': fileTransferSettingId },
+                        success: function (data) {
+                            if (isSource) {
+                                $("#SourceUsername").val(data.ftpSettingItem.UserName);
+                                $("#SourceAddress").val(data.ftpSettingItem.IPAddress);
+                                $("#SourcePassword").val(data.ftpSettingItem.Password);
+                                $("#SourceFolder").val(data.ftpSettingItem.Folder);
+                                $("#SourceConfirmPassword").val(data.ftpSettingItem.Password);
+                            }
+                            else {
+                                $("#DestinationUsername").val(data.ftpSettingItem.UserName);
+                                $("#DestinationAddress").val(data.ftpSettingItem.IPAddress);
+                                $("#DestinationPassword").val(data.ftpSettingItem.Password);
+                                $("#DestinationFolder").val(data.ftpSettingItem.Folder);
+                                $("#DestinationConfirmPassword").val(data.ftpSettingItem.Password);
+                            }
 
+                        }
+                    });
                 }
-            });
-        }
 
-        function GetSFTPSetting(fileTransferSettingId, isSource) {
-            $.ajax({
-                url: '@Url.Action("GetSFTPSetting", "Maintenance")',
-                type: "GET",
-                dataType: "JSON",
-                data: { 'fileTransferSettingId': fileTransferSettingId },
-                success: function (data) {
-                    if (isSource) {
-                        $("#SourceUsername").val(data.sftpSettingItem.UserName);
-                        $("#SourceAddress").val(data.sftpSettingItem.IPAddress);
-                        $("#SourcePassword").val(data.sftpSettingItem.Password);
-                        $("#SourceFolder").val(data.sftpSettingItem.Folder);
-                        $("#SourceConfirmPassword").val(data.sftpSettingItem.Password);
-                    }
-                    else {
-                        $("#DestinationUsername").val(data.sftpSettingItem.UserName);
-                        $("#DestinationAddress").val(data.sftpSettingItem.IPAddress);
-                        $("#DestinationPassword").val(data.sftpSettingItem.Password);
-                        $("#DestinationFolder").val(data.sftpSettingItem.Folder);
-                        $("#DestinationConfirmPassword").val(data.sftpSettingItem.Password);
+                function GetSFTPSetting(fileTransferSettingId, isSource) {
+                    $.ajax({
+                        url: '@Url.Action("GetSFTPSetting", "Maintenance")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { 'fileTransferSettingId': fileTransferSettingId },
+                        success: function (data) {
+                            if (isSource) {
+                                $("#SourceUsername").val(data.sftpSettingItem.UserName);
+                                $("#SourceAddress").val(data.sftpSettingItem.IPAddress);
+                                $("#SourcePassword").val(data.sftpSettingItem.Password);
+                                $("#SourceFolder").val(data.sftpSettingItem.Folder);
+                                $("#SourceConfirmPassword").val(data.sftpSettingItem.Password);
+                            }
+                            else {
+                                $("#DestinationUsername").val(data.sftpSettingItem.UserName);
+                                $("#DestinationAddress").val(data.sftpSettingItem.IPAddress);
+                                $("#DestinationPassword").val(data.sftpSettingItem.Password);
+                                $("#DestinationFolder").val(data.sftpSettingItem.Folder);
+                                $("#DestinationConfirmPassword").val(data.sftpSettingItem.Password);
+                            }
+                        }
+                    });
+                }
+
+                function GetSMTPSetting(fileTransferSettingId, isSource) {
+                    $.ajax({
+                        url: '@Url.Action("GetSMTPSetting", "Maintenance")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { 'fileTransferSettingId': fileTransferSettingId },
+                        success: function (data) {
+                            if (isSource) {
+                                $("#SourceUsername").val(data.smtpSettingItem.UserName);
+                                $("#SourceAddress").val(data.smtpSettingItem.SMTPServer);
+                                $("#SourcePassword").val(data.smtpSettingItem.Password);
+                                $("#SourceConfirmPassword").val(data.smtpSettingItem.Password);
+                            }
+                            else {
+                                $("#DestinationUsername").val(data.smtpSettingItem.UserName);
+                                $("#DestinationAddress").val(data.smtpSettingItem.SMTPServer);
+                                $("#DestinationPassword").val(data.smtpSettingItem.Password);
+                                $("#DestinationConfirmPassword").val(data.smtpSettingItem.Password);
+                            }
+                        }
+                    });
+                }
+
+                function GetNetworkSetting(fileTransferSettingId, isSource) {
+                    $.ajax({
+                        url: '@Url.Action("GetNetworkSetting", "Maintenance")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { 'fileTransferSettingId': fileTransferSettingId },
+                        success: function (data) {
+                            if (isSource) {
+                                $("#SourceUsername").val(data.networkSettingItem.UserName);
+                                $("#SourceAddress").val(data.networkSettingItem.Path);
+                                $("#SourcePassword").val(data.networkSettingItem.Password);
+                                $("#SourceConfirmPassword").val(data.networkSettingItem.Password);
+                            }
+                            else {
+                                $("#DestinationUsername").val(data.networkSettingItem.UserName);
+                                $("#DestinationAddress").val(data.networkSettingItem.Path);
+                                $("#DestinationPassword").val(data.networkSettingItem.Password);
+                                $("#DestinationConfirmPassword").val(data.networkSettingItem.Password);
+                            }
+                        }
+                    });
+                }
+
+                function GetHTTPSetting(fileTransferSettingId, isSource) {
+                    $.ajax({
+                        url: '@Url.Action("GetHTTPSetting", "Maintenance")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: { 'fileTransferSettingId': fileTransferSettingId },
+                        success: function (data) {
+                            if (isSource) {
+                                $("#SourceUsername").val(data.httpSettingItem.UserName);
+                                $("#SourceAddress").val(data.httpSettingItem.URL);
+                                $("#SourcePassword").val(data.httpSettingItem.Password);
+                                $("#SourceConfirmPassword").val(data.httpSettingItem.Password);
+                            }
+                            else {
+                                $("#DestinationUsername").val(data.httpSettingItem.UserName);
+                                $("#DestinationAddress").val(data.httpSettingItem.URL);
+                                $("#DestinationPassword").val(data.httpSettingItem.Password);
+                                $("#DestinationConfirmPassword").val(data.httpSettingItem.Password);
+                            }
+                        }
+                    });
+                }
+
+            });
+
+            function GetMessageSettingsResultCreate(response) {
+                jsonResult = JSON.parse(response);
+                if (jsonResult.result == "ERROR") {
+                    $("#divMsetValidationSummary").show();
+                    $("#lstMsetValidationSummary").html("");
+                    for (var i = 0; i < jsonResult.errorlist.length; i++) {
+                        $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
                     }
                 }
-            });
-        }
-
-        function GetSMTPSetting(fileTransferSettingId, isSource) {
-            $.ajax({
-                url: '@Url.Action("GetSMTPSetting", "Maintenance")',
-                type: "GET",
-                dataType: "JSON",
-                data: { 'fileTransferSettingId': fileTransferSettingId },
-                success: function (data) {
-                    if (isSource) {
-                        $("#SourceUsername").val(data.smtpSettingItem.UserName);
-                        $("#SourceAddress").val(data.smtpSettingItem.SMTPServer);
-                        $("#SourcePassword").val(data.smtpSettingItem.Password);
-                        $("#SourceConfirmPassword").val(data.smtpSettingItem.Password);
-                    }
-                    else {
-                        $("#DestinationUsername").val(data.smtpSettingItem.UserName);
-                        $("#DestinationAddress").val(data.smtpSettingItem.SMTPServer);
-                        $("#DestinationPassword").val(data.smtpSettingItem.Password);
-                        $("#DestinationConfirmPassword").val(data.smtpSettingItem.Password);
-                    }
+                else {
+                    $.ajax(
+                        {
+                            url: '@Url.Action("GetMessageSettings", "Maintenance")' + '?msgCode=' + $("#MsgCode").val() + '&fileType=' + $("#FileType").val(),
+                            type: 'GET',
+                            success: function (data) {
+                                $("#MessageSettings .container .row").html("");
+                                $("#MessageSettings .container .row").html(data);
+                                $('#dvMessageSettings').modal('hide');
+                            }
+                        });
                 }
-            });
-        }
-
-        function GetNetworkSetting(fileTransferSettingId, isSource) {
-            $.ajax({
-                url: '@Url.Action("GetNetworkSetting", "Maintenance")',
-                type: "GET",
-                dataType: "JSON",
-                data: { 'fileTransferSettingId': fileTransferSettingId },
-                success: function (data) {
-                    if (isSource) {
-                        $("#SourceUsername").val(data.networkSettingItem.UserName);
-                        $("#SourceAddress").val(data.networkSettingItem.Path);
-                        $("#SourcePassword").val(data.networkSettingItem.Password);
-                        $("#SourceConfirmPassword").val(data.networkSettingItem.Password);
-                    }
-                    else {
-                        $("#DestinationUsername").val(data.networkSettingItem.UserName);
-                        $("#DestinationAddress").val(data.networkSettingItem.Path);
-                        $("#DestinationPassword").val(data.networkSettingItem.Password);
-                        $("#DestinationConfirmPassword").val(data.networkSettingItem.Password);
-                    }
-                }
-            });
-        }
-
-        function GetHTTPSetting(fileTransferSettingId, isSource) {
-            $.ajax({
-                url: '@Url.Action("GetHTTPSetting", "Maintenance")',
-                type: "GET",
-                dataType: "JSON",
-                data: { 'fileTransferSettingId': fileTransferSettingId },
-                success: function (data) {
-                    if (isSource) {
-                        $("#SourceUsername").val(data.httpSettingItem.UserName);
-                        $("#SourceAddress").val(data.httpSettingItem.URL);
-                        $("#SourcePassword").val(data.httpSettingItem.Password);
-                        $("#SourceConfirmPassword").val(data.httpSettingItem.Password);
-                    }
-                    else {
-                        $("#DestinationUsername").val(data.httpSettingItem.UserName);
-                        $("#DestinationAddress").val(data.httpSettingItem.URL);
-                        $("#DestinationPassword").val(data.httpSettingItem.Password);
-                        $("#DestinationConfirmPassword").val(data.httpSettingItem.Password);
-                    }
-                }
-            });
-        }
-
-    });
-
-    function GetMessageSettingsResultCreate(response) {
-        jsonResult = JSON.parse(response);
-        if (jsonResult.result == "ERROR")
-        {
-            $("#divMsetValidationSummary").show();
-            $("#lstMsetValidationSummary").html("");
-            for (var i = 0; i < jsonResult.errorlist.length; i++) {
-                $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
-            }
-        }
-        else {
-            $('#dvMessageSettings').modal('hide');
-            //$('body').removeClass('modal-open');
-            //$('.modal-backdrop').remove();
-        }
-    };
+            };
 
 </script>
 

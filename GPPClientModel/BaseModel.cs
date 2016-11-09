@@ -13,4 +13,11 @@ namespace GPPClientModel
             return (s ?? string.Empty).Trim();
         }
     }
+
+    public class CustomModel
+    {
+        public Messages Messages { get; set; }
+        public MessageSettings MessageSettings { get; set; }
+        public List<MessageSettings> ListMessageSettings { get; set; }
+    }
 }

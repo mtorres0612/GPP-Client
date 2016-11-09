@@ -627,7 +627,7 @@
         FillData();
 
         $("#ERP").change(function () {
-            PopulatePrincipal($(this).val(), @Model.PRNCPL);
+            PopulatePrincipal($(this).val(), '@Model.PRNCPL');
         });
 
         $("#FilesSentStatusSingle").click(function () {
@@ -669,7 +669,7 @@
 
         function FillData()
         {
-            PopulatePrincipal($("#ERP").val(), @Model.PRNCPL);
+            PopulatePrincipal($("#ERP").val(), '@Model.PRNCPL');
 
             var transTypeSrc = $("#MessageFileSource_TransmissionTypeID option:selected").text();
             $("#SourceUserName, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
@@ -742,7 +742,7 @@
                 success: function (principalList) {
                     $("#PRNCPL").html("");
                     $.each(principalList, function (i, item) {
-                        if (item.Value == principal) {
+                        if (item.Value.trim() == principal.trim()) {
                             $("#PRNCPL").append(
                             $('<option selected></option>').val(item.Value).html(item.Text));
                         }
@@ -889,9 +889,16 @@
             }
         }
         else {
-            $('#dvMessageSettings').modal('hide');
-            //$('body').removeClass('modal-open');
-            //$('.modal-backdrop').remove();
+            $.ajax(
+                {
+                    url: '@Url.Action("GetMessageSettings", "Maintenance")' + '?msgCode=' + $("#MsgCode").val() + '&fileType=' + $("#FileType").val(),
+                    type: 'GET',
+                    success: function (data) {
+                        $("#MessageSettings .container .row").html("");
+                        $("#MessageSettings .container .row").html(data);
+                        $('#dvMessageSettings').modal('hide');
+                    }
+                });
         }
     };
 

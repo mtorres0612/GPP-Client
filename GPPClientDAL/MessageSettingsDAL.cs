@@ -272,7 +272,19 @@ namespace GPPClientDAL
 
         public int Delete(object id)
         {
-            throw new NotImplementedException();
+            string query = "FT_MessageSettingsDelProc";
+            int result = 0;
+
+            SqlParameter sqlParamOutput = new SqlParameter("@returnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            SqlParameter[] sqlParams =  
+            {
+               new SqlParameter("@msetID", Convert.ToInt32(id)),
+               sqlParamOutput
+            };
+
+            result = GPPClientDB.GPPClientDB.ExecuteNonQuery(query, sqlParams);
+
+            return result;
         }
     }
 }

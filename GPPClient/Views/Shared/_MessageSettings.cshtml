@@ -1,65 +1,56 @@
-﻿@model IEnumerable<GPPClientModel.MessageSettings>
-
-<style>
-    #tblMessageSettings tr td {
-        vertical-align: middle;
-    }
-</style>
+﻿@model GPPClientModel.CustomModel 
 
 <p>
-    <button type="button"
-            id="btnAdd"
-            class="btn btn-link btn-md"
-            data-toggle="modal"
-            data-target="#dvMessageSettings"
-            href="@Html.Raw(Url.Action("CreateMessageSettings", "Maintenance", new { msgCode = ViewBag.msgCode }))">
-        New Message Setting
-    </button>
+    <input class="btn btn-link btn-md" type="submit" id="btnSaveMset" name="save" value="Create Message Setting" />
 </p>
+
 <table class="table" id="tblMessageSettings">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.MsgCode)
+            @Html.DisplayNameFor(model => model.MessageSettings.MsgCode)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ERP)
+            @Html.DisplayNameFor(model => model.MessageSettings.ERP)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PRNCPL)
+            @Html.DisplayNameFor(model => model.MessageSettings.PRNCPL)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.MsgCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ERP)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PRNCPL)
-        </td>
-        <td>
-            <button type="button"
-                    id="btnEdit"
-                    class="btn btn-link btn-sm"
-                    data-toggle="modal"
-                    data-target="#dvMessageSettings"
-                    href="@Html.Raw(Url.Action("EditMessageSettings", "Maintenance", new { msgCode = item.MsgCode }))">
-                Edit
-            </button> | 
-            <button type="button"
-                    id="btnEdit"
-                    class="btn btn-link btn-sm"
-                    data-toggle="modal"
-                    data-target="#dvMessageSettings"
-                    href="@Html.Raw(Url.Action("EditMessageSettings", "Maintenance", new { msgCode = item.MsgCode }))">
-                Delete
-            </button>
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.ListMessageSettings)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MsgCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ERP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PRNCPL)
+            </td>
+            <td>
+                <button type="button"
+                        id="btnEdit"
+                        class="btn btn-link btn-sm"
+                        data-toggle="modal"
+                        data-target="#dvMessageSettings"
+                        href="@Html.Raw(Url.Action("EditMessageSettings", "Maintenance", new { msgCode = item.MsgCode, erp = item.ERP }))">
+                    Edit
+                </button> |
+                <button type="button"
+                        id="btnDelete"
+                        class="btn btn-link btn-sm"
+                        data-toggle="modal"
+                        data-target="#dvDeleteConfirmation"
+                        data-record-id=@item.MsetID
+                        data-message-code=@item.MsgCode
+                        data-file-type=@item.FileType>
+                    Delete
+                </button>
+            </td>
+        </tr>
+    }
 
 </table>

@@ -252,25 +252,34 @@ namespace GPPClient.Controllers
             return View(item);
         }
 
+
         public ActionResult CreateMessage(string trdpCode, string coluCode)
         {
-            Messages model           = new Messages();
-            model.TradingPartnercode = trdpCode;
-            model.ColuCode           = coluCode;
-            model.Counter            = 00001;
+            GPPClientModel.CustomModel custom    = new GPPClientModel.CustomModel();
+            custom.Messages                      = new Messages();
+            custom.Messages.TradingPartnercode   = trdpCode;
+            custom.Messages.ColuCode             = coluCode;
+            custom.Messages.Counter              = 00001;
+            custom.ListMessageSettings           = new List<MessageSettings>();
+            ViewBag.isNew                        = true;
+            ViewBag.customModel                  = custom;
+            ViewBag.Messages                     = custom.Messages;
             PopulateMessageLOV();
-            return View(model);
+            return View(custom);
         }
 
         [HttpPost]
-        public ActionResult CreateMessage(Messages item)
+        public ActionResult CreateMessage(CustomModel item, string save, bool isNew)
         {
             int result = 0;
             if (ModelState.IsValid)
             {
-                item.User = HttpContext.User.Identity.Name;
-                MessagesBL oMessagesBL = new MessagesBL();
-                oMessagesBL.Insert(item);
+                if (isNew)
+                {
+                    item.Messages.User     = HttpContext.User.Identity.Name;
+                    MessagesBL oMessagesBL = new MessagesBL();
+                    oMessagesBL.Insert(item.Messages);
+                }
             }
             else
             {
@@ -290,7 +299,7 @@ namespace GPPClient.Controllers
                 return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "SUCCESS", msgCode = item.Messages.MsgCode, message = save, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult EditMessage(string trdpCode, string msgCode)
@@ -299,8 +308,14 @@ namespace GPPClient.Controllers
             item                                      = oMessagesBL.GetAllMessages(trdpCode, msgCode).FirstOrDefault();
             List<MessageSettings> messageSettingsList = new List<MessageSettings>();
             messageSettingsList                       = oMessageSettingsBL.GetAll(msgCode).ToList();
+            ViewBag.msgCode                           = msgCode;
+            ViewBag.fileType                          = item.FileType;
+            ViewBag.isNew                             = false;
 
-            ViewBag.messageSettingsList = messageSettingsList;
+            CustomModel custModel = new CustomModel();
+
+            custModel.Messages = item;
+            custModel.ListMessageSettings = messageSettingsList;
 
             if (item == null)
             {
@@ -309,18 +324,18 @@ namespace GPPClient.Controllers
 
             PopulateMessageLOV();
 
-            return View(item);
+            return View(custModel);
         }
 
         [HttpPost]
-        public ActionResult EditMessage(Messages item)
+        public ActionResult EditMessage(CustomModel item)
         {
             int result = 0;
             if (ModelState.IsValid)
             {
-                item.User = HttpContext.User.Identity.Name;
+                item.Messages.User = HttpContext.User.Identity.Name;
                 MessagesBL oMessagesBL = new MessagesBL();
-                oMessagesBL.Update(item);
+                oMessagesBL.Update(item.Messages);
             }
             else
             {
@@ -361,7 +376,7 @@ namespace GPPClient.Controllers
         public ActionResult DeleteConfirmedMessage(Messages item)
         {
             int result = 0;
-
+            
             result = oMessagesBL.Delete(item.MsgCode, item.TradingPartnercode);
 
             if (result != 1)
@@ -372,10 +387,30 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CreateMessageSettings(string msgCode)
+        public ActionResult GetMessageSettings(string msgCode, string fileType)
         {
-            MessageSettings item = new MessageSettings();
-            item.MsgCode         = msgCode;
+            CustomModel custModel                     = new CustomModel();
+            List<MessageSettings> messageSettingsList = new List<MessageSettings>();
+            messageSettingsList                       = oMessageSettingsBL.GetAll(msgCode).ToList();
+            ViewBag.msgCode                           = msgCode;
+            ViewBag.fileType                          = fileType;
+            custModel.ListMessageSettings             = messageSettingsList;
+
+            return PartialView("_MessageSettings", custModel);
+        }
+
+        public ActionResult CreateMessageSettings(string msgCode, string fileType)
+        {
+            MessageSettings item     = new MessageSettings();
+            item.MsgCode             = msgCode;
+            item.FileType            = fileType;
+            item.MsetBatchTime       = (DateTime)DateTime.Parse("01/01/2008 13:00");
+            item.MsetBatchTimeString = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
+            item.MsetStartTime       = (DateTime)DateTime.Parse("01/01/2008 13:00");
+            item.MsetStartTimeString = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
+            item.MsetEndTime         = (DateTime)DateTime.Parse("01/01/2008 13:00");
+            item.MsetEndTimeString   = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
+
             PopulateMessageSettingsLOV();
 
             return View(item);
@@ -384,7 +419,7 @@ namespace GPPClient.Controllers
         [HttpPost]
         public ActionResult CreateMessageSettings(MessageSettings item, FormCollection fc)
         {
-            int sourceId = 0, destinationId = 0;
+            int sourceId = 0, destinationId = 0, msetId = 0;
 
             if (ModelState.IsValid)
             {
@@ -401,7 +436,7 @@ namespace GPPClient.Controllers
                 TimeSpan tsEnd = dtEnd.TimeOfDay;
                 item.MsetEndTime = item.MsetEndTime.Date + tsEnd;
 
-                oMessageSettingsBL.Insert(item);
+                msetId = oMessageSettingsBL.Insert(item);
                 #endregion
 
                 #region [Update FileTransferSetting]
@@ -441,6 +476,16 @@ namespace GPPClient.Controllers
                 SaveTransmissionSetting(item.MessageFileDestination.TransmissionTypeID, destinationId, false, item);
 
                 #endregion
+
+                if (item.MessageFileSourceId == 0 || item.MessageFileDestinationId == 0)
+                {
+                    item.MsetID                   = msetId;
+                    item.MessageFileSourceId      = sourceId;
+                    item.MessageFileDestinationId = destinationId;
+                    
+                    oMessageSettingsBL.Update(item);
+
+                }
             }
             else
             {
@@ -459,10 +504,10 @@ namespace GPPClient.Controllers
             return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditMessageSettings(string msgCode)
+        public ActionResult EditMessageSettings(string msgCode, string erp)
         {
             MessageSettings item        = new MessageSettings();
-            item                        = oMessageSettingsBL.GetAll(msgCode).FirstOrDefault();
+            item                        = oMessageSettingsBL.GetAll(msgCode).Where(x => x.ERP == erp).FirstOrDefault();
             item.MessageFileSource      = oFileTransferSettingBL.GetAll(item.MessageFileSourceId).FirstOrDefault();
             item.MessageFileDestination = oFileTransferSettingBL.GetAll(item.MessageFileDestinationId).FirstOrDefault();
             PopulateMessageSettingsLOV();
@@ -551,6 +596,21 @@ namespace GPPClient.Controllers
             }
 
             return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteMessageSettings(int id, string msgCode, string fileType)
+        {
+            int result = 0;
+
+            result = oMessageSettingsBL.Delete(id);
+
+            if (result == 0)
+            {
+                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            }
+
+            return GetMessageSettings(msgCode, fileType);
         }
 
         private void SaveTransmissionSetting(int? transmissionTypeId, int fileTransferSettingId, bool isSource, MessageSettings mSetItem)
