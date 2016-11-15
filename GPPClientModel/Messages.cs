@@ -267,11 +267,35 @@ namespace GPPClientModel
             set { _startRuntime = value.HasValue ? value : Convert.ToDateTime("1/1/2008"); }
         }
 
+        private string _startRuntimeString;
+
+        public string StartRuntimeString
+        {
+            get { return _startRuntimeString; }
+            set { _startRuntimeString = value; }
+        }
+
         [Display(Name = "End Time")]
         public DateTime? EndRuntime
         {
             get { return _endRuntime; }
             set { _endRuntime = value.HasValue ? value : Convert.ToDateTime("1/1/2008"); }
+        }
+
+        private string _endRuntimeString;
+
+        public string EndRuntimeString
+        {
+            get { return _endRuntimeString; }
+            set { _endRuntimeString = value; }
+        }
+
+        private bool _isNew;
+
+        public bool IsNew
+        {
+            get { return _isNew; }
+            set { _isNew = value; }
         }
 
     }

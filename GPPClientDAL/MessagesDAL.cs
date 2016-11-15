@@ -42,25 +42,27 @@ namespace GPPClientDAL
 
             foreach (DataRow dr in dt.Rows)
             {
-                Messages item           = new Messages();
-                item.MsgCode            = dr["MsgCode"].ToString();
-                item.TradingPartnercode = dr["trdpCode"].ToString();
-                item.ColuCode           = dr["coluCode"].ToString();
-                item.IsDebug            = Convert.ToBoolean(dr["MsgIsDebug"]);
-                item.Counter            = null;
-                item.Name               = dr["MsgName"].ToString();
-                item.FileType           = dr["MsgFileType"].ToString();
-                item.StartReadWrite     = Convert.ToInt32(dr["MsgStartReadWrite"]);
-                item.DelLinePattern     = dr["MsgDelLinePattern"].ToString();
-                item.CodePageId         = Convert.ToInt32(dr["MSgCodePage"]);
-                item.FileNameConvention = dr["MsgFileNameConvention"].ToString();
-                item.FileNameExtension  = dr["MsgFileNameExtension"].ToString();
-                item.FileNameDateFormat = dr["MsgFileNameDateFormat"].ToString();
-                item.ExcelTemplatePath  = dr["MsgExcelTemplatePath"].ToString();
-                item.ExcelRowOffset     = Convert.ToInt32(dr["MsgExcelRowOffset"]);
-                item.ExcelXMLTableNo    = Convert.ToInt32(dr["MsgExcelXMLTableNo"]);
-                item.FileDirectionCode  = dr["FileDirectionCode"].ToString();
-                item.ApplicationType    = dr["ApluCode"].ToString();
+                Messages item                = new Messages();
+                item.MsgCode                 = dr["MsgCode"].ToString();
+                item.TradingPartnercode      = dr["trdpCode"].ToString();
+                item.ColuCode                = dr["coluCode"].ToString();
+                item.IsDebug                 = Convert.ToBoolean(dr["MsgIsDebug"]);
+                item.Counter                 = null;
+                item.Name                    = dr["MsgName"].ToString();
+                item.FileType                = dr["MsgFileType"].ToString();
+                item.StartReadWrite          = Convert.ToInt32(dr["MsgStartReadWrite"]);
+                item.DelLinePattern          = dr["MsgDelLinePattern"].ToString();
+                item.CodePageId              = Convert.ToInt32(dr["MSgCodePage"]);
+                item.FileNameConvention      = dr["MsgFileNameConvention"].ToString();
+                item.FileNameExtension       = dr["MsgFileNameExtension"].ToString();
+                item.FileNameDateFormat      = dr["MsgFileNameDateFormat"].ToString();
+                item.ExcelTemplatePath       = dr["MsgExcelTemplatePath"].ToString();
+                item.ExcelRowOffset          = Convert.ToInt32(dr["MsgExcelRowOffset"]);
+                item.ExcelXMLTableNo         = Convert.ToInt32(dr["MsgExcelXMLTableNo"]);
+                item.FileDirectionCode       = dr["FileDirectionCode"].ToString();
+                item.ApplicationType         = dr["ApluCode"].ToString();
+                item.ManualRunFlag           = Convert.ToBoolean(dr["MsgManualRunFlag"].ToString());
+                item.TemporaryFileExtension  = dr["MsgTempExtension"].ToString();
 
                 if (dr["MsgCounter"] != DBNull.Value)
                     item.Counter = Convert.ToInt32(dr["MsgCounter"]);
@@ -72,6 +74,15 @@ namespace GPPClientDAL
                 else
                 {
                     item.XmlNode = Convert.ToInt32(dr["MsgXmlNode"]);
+                }
+
+                if (string.IsNullOrEmpty(dr["IsUseTempExtension"].ToString()))
+                {
+                    item.IsUseTemporaryExtension = false;
+                }
+                else
+                {
+                    item.IsUseTemporaryExtension = Convert.ToBoolean(dr["IsUseTempExtension"].ToString());
                 }
 
                 if (dr["MsgMonday"].ToString().Equals(string.Empty))
@@ -139,20 +150,25 @@ namespace GPPClientDAL
 
                 if (dr["MsgStartTime"].ToString().Equals(string.Empty))
                 { 
-                    item.StartRuntime = DateTime.Parse("01/01/2008 13:00");
+                    item.StartRuntime       = DateTime.Parse("01/01/2008 13:00");
+                    item.StartRuntimeString = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
+
                 }
                 else
                 { 
-                    item.StartRuntime = DateTime.Parse(dr["MsgStartTime"].ToString());
+                    item.StartRuntime       = DateTime.Parse(dr["MsgStartTime"].ToString());
+                    item.StartRuntimeString = DateTime.Parse(dr["MsgStartTime"].ToString()).ToString("hh:mm:ss tt");
                 }
 
                 if (dr["MsgEndTime"].ToString().Equals(string.Empty))
                 { 
-                    item.EndRuntime = DateTime.Parse("01/01/2008 13:00");
+                    item.EndRuntime       = DateTime.Parse("01/01/2008 13:00");
+                    item.EndRuntimeString = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
                 }
                 else
                 { 
-                    item.EndRuntime = DateTime.Parse(dr["MsgEndTime"].ToString());
+                    item.EndRuntime       = DateTime.Parse(dr["MsgEndTime"].ToString());
+                    item.EndRuntimeString = DateTime.Parse(dr["MsgEndTime"].ToString()).ToString("hh:mm:ss tt");
                 }
 
                 list.Add(item);

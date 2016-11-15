@@ -32,16 +32,16 @@
             <td>
                 @Ajax.ActionLink(item.TradingPartnerCode,
                                  "GetMessagesPerTradingPartner",
-                                 new 
-                                 { 
+                                 new
+                                 {
                                      trdpCode = item.TradingPartnerCode,
-                                     coluCode = item.ColuCode 
+                                     coluCode = item.ColuCode
                                  },
-                                 new AjaxOptions 
+                                 new AjaxOptions
                                  {
                                      UpdateTargetId = "MessagesList",
-                                     InsertionMode  = InsertionMode.Replace,
-                                     HttpMethod     = "GET"
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "GET"
                                  }
                                  )
             </td>

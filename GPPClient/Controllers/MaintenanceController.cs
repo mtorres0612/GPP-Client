@@ -240,6 +240,18 @@ namespace GPPClient.Controllers
             return PartialView("_Messages", list.ToPagedList(page, pageSize));
         }
 
+        public ActionResult GetMessagesByDefaultTradingPartner()
+        {
+            TradingPartner item = new TradingPartner();
+            List<Messages> list = new List<Messages>();
+            item                = oTradingPartnerBL.GetAll().OrderBy(x => x.TradingPartnerCode).FirstOrDefault();
+            list                = oMessagesBL.GetAllMessages(item.TradingPartnerCode).OrderBy(x => x.MsgCode).ToList();
+            ViewBag.trdpCode    = item.TradingPartnerCode;
+            ViewBag.coluCode    = item.ColuCode;
+
+            return PartialView("_Messages", list.ToPagedList(1, 10));
+        }
+
         public ActionResult MessageDetails(string trdpCode, string msgCode)
         {
             Messages item = oMessagesBL.GetAllMessages(trdpCode, msgCode).FirstOrDefault();
@@ -260,6 +272,7 @@ namespace GPPClient.Controllers
             custom.Messages.TradingPartnercode   = trdpCode;
             custom.Messages.ColuCode             = coluCode;
             custom.Messages.Counter              = 00001;
+            custom.Messages.IsNew                = true;
             custom.ListMessageSettings           = new List<MessageSettings>();
             ViewBag.isNew                        = true;
             ViewBag.customModel                  = custom;
@@ -272,31 +285,40 @@ namespace GPPClient.Controllers
         public ActionResult CreateMessage(CustomModel item, string save, bool isNew)
         {
             int result = 0;
-            if (ModelState.IsValid)
+
+            if (isNew)
             {
-                if (isNew)
+                if (ModelState.IsValid)
                 {
+                    DateTime dtStart = DateTime.ParseExact(item.Messages.StartRuntimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                    TimeSpan tsStart = dtStart.TimeOfDay;
+                    item.Messages.StartRuntime = item.Messages.StartRuntime.Value.Date + tsStart;
+
+                    DateTime dtEnd = DateTime.ParseExact(item.Messages.EndRuntimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                    TimeSpan tsEnd = dtEnd.TimeOfDay;
+                    item.Messages.EndRuntime = item.Messages.EndRuntime.Value.Date + tsEnd;
+
                     item.Messages.User     = HttpContext.User.Identity.Name;
                     MessagesBL oMessagesBL = new MessagesBL();
                     oMessagesBL.Insert(item.Messages);
                 }
-            }
-            else
-            {
-                List<ModelError> errors = new List<ModelError>();
-                foreach (ModelState modelState in ViewData.ModelState.Values)
+                else
                 {
-                    foreach (ModelError error in modelState.Errors)
+                    List<ModelError> errors = new List<ModelError>();
+                    foreach (ModelState modelState in ViewData.ModelState.Values)
                     {
-                        errors.Add(error);
+                        foreach (ModelError error in modelState.Errors)
+                        {
+                            errors.Add(error);
+                        }
                     }
+                    return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
-            }
 
-            if (result == -1)
-            {
-                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+                if (result == -1)
+                {
+                    return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+                }
             }
 
             return Json(new { result = "SUCCESS", msgCode = item.Messages.MsgCode, message = save, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
@@ -328,34 +350,45 @@ namespace GPPClient.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditMessage(CustomModel item)
+        public ActionResult EditMessage(CustomModel item, string save)
         {
             int result = 0;
-            if (ModelState.IsValid)
+            if (save == "Update Message")
             {
-                item.Messages.User = HttpContext.User.Identity.Name;
-                MessagesBL oMessagesBL = new MessagesBL();
-                oMessagesBL.Update(item.Messages);
-            }
-            else
-            {
-                List<ModelError> errors = new List<ModelError>();
-                foreach (ModelState modelState in ViewData.ModelState.Values)
+                if (ModelState.IsValid)
                 {
-                    foreach (ModelError error in modelState.Errors)
-                    {
-                        errors.Add(error);
-                    }
+                    DateTime dtStart = DateTime.ParseExact(item.Messages.StartRuntimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                    TimeSpan tsStart = dtStart.TimeOfDay;
+                    item.Messages.StartRuntime = item.Messages.StartRuntime.Value.Date + tsStart;
+
+                    DateTime dtEnd = DateTime.ParseExact(item.Messages.EndRuntimeString, "h:mm:ss tt", CultureInfo.InvariantCulture);
+                    TimeSpan tsEnd = dtEnd.TimeOfDay;
+                    item.Messages.EndRuntime = item.Messages.EndRuntime.Value.Date + tsEnd;
+
+                    item.Messages.User     = HttpContext.User.Identity.Name;
+                    MessagesBL oMessagesBL = new MessagesBL();
+                    oMessagesBL.Update(item.Messages);
                 }
-                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    List<ModelError> errors = new List<ModelError>();
+                    foreach (ModelState modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (ModelError error in modelState.Errors)
+                        {
+                            errors.Add(error);
+                        }
+                    }
+                    return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (result == -1)
+                {
+                    return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+                }
             }
 
-            if (result == -1)
-            {
-                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
-            }
-
-            return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "SUCCESS", message = save, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult DeleteMessage(string trdpCode, string msgCode)
@@ -410,6 +443,7 @@ namespace GPPClient.Controllers
             item.MsetStartTimeString = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
             item.MsetEndTime         = (DateTime)DateTime.Parse("01/01/2008 13:00");
             item.MsetEndTimeString   = DateTime.Parse("01/01/2008 13:00").ToString("hh:mm:ss tt");
+            item.BackUpFolder        = @"D:\FTPHome\LocalUser\";
 
             PopulateMessageSettingsLOV();
 
@@ -730,6 +764,11 @@ namespace GPPClient.Controllers
 
             FTPSetting item = oFTPSettingBL.GetAll(fileTransferSettingId).FirstOrDefault();
 
+            if (item == null)
+            {
+                item = new FTPSetting();
+            }
+
             return Json(new { result = "SUCCESS", ftpSettingItem = item }, JsonRequestBehavior.AllowGet);
         }
 
@@ -769,6 +808,11 @@ namespace GPPClient.Controllers
             SFTPSettingBL oSFTPSettingBL = SFTPSettingBL.GetInstance();
 
             SFTPSetting item = oSFTPSettingBL.GetAll(fileTransferSettingId).FirstOrDefault();
+
+            if (item == null)
+            {
+                item = new SFTPSetting();
+            }
 
             return Json(new { result = "SUCCESS", sftpSettingItem = item }, JsonRequestBehavior.AllowGet);
         }

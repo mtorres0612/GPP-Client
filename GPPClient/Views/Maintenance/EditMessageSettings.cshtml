@@ -16,11 +16,11 @@
         width: auto;
     }
 
-    legend {
+    /*legend {
         width: inherit;
         font-size: 14px;
         margin-bottom: 10px;
-    }
+    }*/
 
     .label-padding {
         margin-right: 10px;
@@ -66,7 +66,7 @@
                         @Html.AntiForgeryToken()
 
                         <div class="form-horizontal">
-                            <div class="alert alert-danger" id="divMsetValidationSummary">
+                            <div class="alert alert-danger" id="divEditMsetValidationSummary">
                                 <strong>Error saving message settings.</strong> Details:
                                 <ul id="lstMsetValidationSummary"></ul>
                             </div>
@@ -201,7 +201,7 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <fieldset class="fieldset-auto-width">
-                                        <legend>@Html.EditorFor(model => model.IsZip) @Html.LabelFor(model => model.IsZip)</legend>
+                                        <legend class="legend">@Html.EditorFor(model => model.IsZip) Zip Facility</legend>
                                         <div class="form-inline">
                                             <div class="form-group">
                                                 <div class="col-xs-3">
@@ -228,7 +228,7 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     <fieldset class="fieldset-auto-width">
-                                        <legend>@Html.EditorFor(model => model.MsetBatchRun) Batch</legend>
+                                        <legend class="legend">@Html.EditorFor(model => model.MsetBatchRun) Batch</legend>
                                         <div class="form-group">
                                             <div class="col-xs-3">
                                                 @Html.LabelFor(model => model.MsetBatchTime, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
@@ -243,7 +243,7 @@
                                 </div>
                                 <div class="col-xs-9">
                                     <fieldset class="fieldset-auto-width form-inline">
-                                        <legend>@Html.EditorFor(model => model.MsetRunTime) Run Time</legend>
+                                        <legend class="legend">@Html.EditorFor(model => model.MsetRunTime) Run Time</legend>
 
                                         @Html.LabelFor(model => model.MsetStartTime, htmlAttributes: new { @class = "control-label" })
                                         @Html.EditorFor(model => model.MsetStartTimeString, new { htmlAttributes = new { @class = "form-control", @style = "width: 130px;margin-right: 30px" } })
@@ -265,7 +265,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <fieldset class="fieldset-auto-width">
-                                        <legend>@Html.EditorFor(model => model.FileConvertionFlag) @Html.LabelFor(model => model.FileConvertionFlag)</legend>
+                                        <legend class="legend">@Html.EditorFor(model => model.FileConvertionFlag) File Conversion</legend>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-3">
@@ -294,7 +294,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <fieldset class="fieldset-auto-width">
-                                        <legend>Message File Source</legend>
+                                        <legend class="legend">Message File Source</legend>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
@@ -363,7 +363,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <fieldset class="fieldset-auto-width">
-                                        <legend>Message File Destination</legend>
+                                        <legend class="legend">Message File Destination</legend>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
@@ -463,7 +463,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <fieldset class="fieldset-auto-width">
-                                        <legend>Settings</legend>
+                                        <legend class="legend">Settings</legend>
                                         <div class="col-xs-6">
                                             <div class="form-group">
                                                 <div class="col-xs-4">
@@ -614,17 +614,47 @@
 
         var zipEnabled, runTimeEnabled, conventionEnabled;
 
-        $("#divMsetValidationSummary").hide();
+        Initialize();
 
-        zipEnabled = $("#IsZip").is(":checked");
-        runTimeEnabled = $("#MsetRunTime").is(":checked");
-        conventionEnabled = $("#FileConvertionFlag").is(":checked");
+        function Initialize() {
+            PopulatePrincipal($("#ERP").val(), '@Model.PRNCPL');
 
-        $('#ZipPassword, #ConfirmPassword').attr("readonly", !zipEnabled);
-        $('#MsetStartTimeString, #MsetEndTimeString, #MsetInterval').attr("readonly", !runTimeEnabled);
-        $('#SourceCodePage, #DestinationCodePage').attr("readonly", !conventionEnabled);
+            $("#SourceUserName, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
+            $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
 
-        FillData();
+            $("#divEditMsetValidationSummary").hide();
+
+            var srcTransType = $("#MessageFileSource_TransmissionTypeID option:selected").text();
+            FillMessageSourceDetails(srcTransType);
+
+            var destTransType = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
+            FillMessageDestinationDetails(destTransType);
+
+            zipEnabled        = $("#IsZip").is(":checked");
+            runTimeEnabled    = $("#MsetRunTime").is(":checked");
+            conventionEnabled = $("#FileConvertionFlag").is(":checked");
+
+            $('#ZipPassword, #ConfirmPassword').attr("readonly", !zipEnabled);
+            $('#MsetStartTimeString, #MsetEndTimeString, #MsetInterval').attr("readonly", !runTimeEnabled);
+            $('#SourceCodePage, #DestinationCodePage').attr("readonly", !conventionEnabled);
+            $("#MsetBatchRun, #MsetBatchTimeString").attr("readonly", true);
+        }
+
+        function HideFields() {
+            $("#SourceUserName").hide();
+            $("#SourceAddress").hide();
+            $("#SourcePassword").hide();
+            $("#SourceFolder").hide();
+            $("#SourceConfirmPassword").hide();
+
+            $("#DestinationUsername").hide();
+            $("#DestinationAddress").hide();
+            $("#DestinationPassword").hide();
+            $("#DestinationFolder").hide();
+            $("#DestinationConfirmPassword").hide();
+            $("#DestinationPort").hide();
+            $("#btnEmailDistList").hide();
+        }
 
         $("#ERP").change(function () {
             PopulatePrincipal($(this).val(), '@Model.PRNCPL');
@@ -667,21 +697,13 @@
             FillMessageDestinationDetails(transType);
         });
 
-        function FillData()
-        {
-            PopulatePrincipal($("#ERP").val(), '@Model.PRNCPL');
-
-            var transTypeSrc = $("#MessageFileSource_TransmissionTypeID option:selected").text();
-            $("#SourceUserName, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
-            FillMessageSourceDetails(transTypeSrc);
-
-            var transTypeDest = $("#MessageFileDestination_TransmissionTypeID option:selected").text();
-            $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
-            FillMessageDestinationDetails(transTypeDest);
-        }
-
         function FillMessageSourceDetails(transType)
         {
+            $("#SourceUserName").show();
+            $("#SourceAddress").show();
+            $("#SourcePassword").show();
+            $("#SourceConfirmPassword").show();
+
             if (transType == "FTP") {
                 $("#SourceFolder").show();
                 $("#lblSourceAddress").text("IP Address");
@@ -702,34 +724,58 @@
                 $("#lblSourceAddress").text("URL");
                 GetHTTPSetting(@Model.MessageFileSourceId, true);
             }
+            else {
+                $("#SourceUserName").hide();
+                $("#SourceAddress").hide();
+                $("#SourcePassword").hide();
+                $("#SourceFolder").hide();
+                $("#SourceConfirmPassword").hide();
+            }
         }
 
         function FillMessageDestinationDetails(transType)
         {
+            $("#DestinationUsername").show();
+            $("#DestinationAddress").show();
+            $("#DestinationPassword").show();
+            $("#DestinationConfirmPassword").show();
+
             if (transType == "FTP") {
                 $("#DestinationFolder, #DestinationPort").show();
+                $("#btnEmailDistList").hide();
                 $("#lblDestinationAddress").text("IP Address");
                 GetFTPSetting(@Model.MessageFileDestinationId, false);
             }
             else if (transType == "SFTP") {
                 $("#DestinationFolder, #DestinationPort").show();
+                $("#btnEmailDistList").hide();
                 $("#lblDestinationAddress").text("IP Address");
                 GetSFTPSetting(@Model.MessageFileDestinationId, false);
             }
             else if (transType == "NETWORK") {
-                $("#DestinationFolder, #DestinationPort").hide();
+                $("#DestinationFolder, #DestinationPort, #btnEmailDistList").hide();
                 $("#lblDestinationAddress").text("Path");
                 GetNetworkSetting(@Model.MessageFileDestinationId, false);
             }
             else if (transType == "HTTP") {
-                $("#DestinationFolder, #DestinationPort").hide();
+                $("#DestinationFolder, #DestinationPort, #btnEmailDistList").hide();
                 $("#lblDestinationAddress").text("URL");
                 GetHTTPSetting(@Model.MessageFileDestinationId, false);
             }
             else if (transType == "EMAIL") {
                 $("#DestinationFolder, #DestinationPort").hide();
+                $("#btnEmailDistList").show();
                 $("#lblDestinationAddress").text("SMTP Server");
                 GetSMTPSetting(@Model.MessageFileDestinationId, false);
+            }
+            else {
+                $("#DestinationUsername").hide();
+                $("#DestinationAddress").hide();
+                $("#DestinationPassword").hide();
+                $("#DestinationFolder").hide();
+                $("#DestinationConfirmPassword").hide();
+                $("#DestinationPort").hide();
+                $("#btnEmailDistList").hide();
             }
         }
 
@@ -878,29 +924,29 @@
 
     });
 
-    function GetMessageSettingsResult(response) {
-        jsonResult = JSON.parse(response);
-        if (jsonResult.result == "ERROR")
-        {
-            $("#divMsetValidationSummary").show();
-            $("#lstMsetValidationSummary").html("");
-            for (var i = 0; i < jsonResult.errorlist.length; i++) {
-                $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
+        function GetMessageSettingsResult(response) {
+            jsonResult = JSON.parse(response);
+            if (jsonResult.result == "ERROR")
+            {
+                $("#divEditMsetValidationSummary").show();
+                $("#lstMsetValidationSummary").html("");
+                for (var i = 0; i < jsonResult.errorlist.length; i++) {
+                    $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
+                }
             }
-        }
-        else {
-            $.ajax(
-                {
-                    url: '@Url.Action("GetMessageSettings", "Maintenance")' + '?msgCode=' + $("#MsgCode").val() + '&fileType=' + $("#FileType").val(),
-                    type: 'GET',
-                    success: function (data) {
-                        $("#MessageSettings .container .row").html("");
-                        $("#MessageSettings .container .row").html(data);
-                        $('#dvMessageSettings').modal('hide');
-                    }
-                });
-        }
-    };
+            else {
+                $.ajax(
+                    {
+                        url: '@Url.Action("GetMessageSettings", "Maintenance")' + '?msgCode=' + $("#MsgCode").val() + '&fileType=' + $("#FileType").val(),
+                        type: 'GET',
+                        success: function (data) {
+                            $("#MessageSettings .container .row").html("");
+                            $("#MessageSettings .container .row").html(data);
+                            $('#dvMessageSettings').modal('hide');
+                        }
+                    });
+            }
+        };
 
 </script>
 
