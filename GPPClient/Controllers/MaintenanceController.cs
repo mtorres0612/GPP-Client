@@ -409,7 +409,16 @@ namespace GPPClient.Controllers
         public ActionResult DeleteConfirmedMessage(Messages item)
         {
             int result = 0;
-            
+
+            List<MessageSettings> messageSettingsList = new List<MessageSettings>();
+            messageSettingsList                       = oMessageSettingsBL.GetAll(item.MsgCode).ToList();
+
+            foreach (var mSetItem in messageSettingsList)
+            {
+                oMessageSettingsBL.Delete(mSetItem.MsetID);
+
+            }
+
             result = oMessagesBL.Delete(item.MsgCode, item.TradingPartnercode);
 
             if (result != 1)
@@ -688,7 +697,7 @@ namespace GPPClient.Controllers
             }
         }
 
-        public ActionResult EditEmailDistributionList(string msgCode, string erp)
+        public ActionResult ManageEmailDistributionList(string msgCode, string erp)
         {
             EmailDistributionListBL oEmailDistributionListBL = EmailDistributionListBL.GetInstance();
             EmailDistributionList item                       = new EmailDistributionList();
@@ -703,6 +712,46 @@ namespace GPPClient.Controllers
             }
 
             return View("~/Views/Shared/_EmailDistributionList.cshtml", item);
+        }
+
+        [HttpPost]
+        public ActionResult ManageEmailDistributionList(EmailDistributionList item)
+        {
+            int result = 0;
+            if (ModelState.IsValid)
+            {
+                EmailDistributionListBL oEmailDistributionListBL = EmailDistributionListBL.GetInstance();
+                EmailDistributionList emailItem                  = new EmailDistributionList();
+                emailItem                                        = oEmailDistributionListBL.GetAll().Where(x => x.MsgCode == item.MsgCode && x.ERP == item.ERP).FirstOrDefault();
+
+                if (emailItem == null)
+                {
+                    result = oEmailDistributionListBL.Insert(item);
+                }
+                else
+                {
+                    result = oEmailDistributionListBL.Update(item);
+                }
+            }
+            else
+            {
+                List<ModelError> errors = new List<ModelError>();
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        errors.Add(error);
+                    }
+                }
+
+                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = errors }, JsonRequestBehavior.AllowGet);
+            }
+            if (result == -1)
+            {
+                return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
         private void PopulateMessageSettingsLOV()

@@ -447,12 +447,18 @@
                                         <div class="col-xs-6">
                                             @*<input class="btn btn-success btn-md" type="button" id="btnEmailDistList" value="Email Distribution List" />*@
 
-                                            <button type="button"
+                                            @*<button type="button"
                                                     id="btnEmailDistList"
                                                     class="btn btn-primary btn-md"
                                                     data-toggle="modal"
                                                     data-target="#dvEmailDistList"
                                                     href="@Html.Raw(Url.Action("EditEmailDistributionList", "Maintenance", new { msgCode = @Model.MsgCode, erp = @Model.ERP }))">
+                                                Email Distribution List
+                                            </button>*@
+
+                                            <button type="button"
+                                                    id="btnEmailDistList"
+                                                    class="btn btn-primary btn-md">
                                                 Email Distribution List
                                             </button>
                                         </div>
@@ -655,6 +661,20 @@
             $("#DestinationPort").hide();
             $("#btnEmailDistList").hide();
         }
+
+        $("#btnEmailDistList").click(function () {
+
+            $.ajax({
+                url: '@Url.Action("ManageEmailDistributionList", "Maintenance")?msgCode=' + $("#MsgCode").val() + '&erp=' + $("#ERP").val(),
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#dvEmailDistList').modal('show');
+                    $("#dvEmailDistList").html("");
+                    $("#dvEmailDistList").html(result);
+                }
+            });
+        });
 
         $("#ERP").change(function () {
             PopulatePrincipal($(this).val(), '@Model.PRNCPL');
@@ -924,29 +944,29 @@
 
     });
 
-        function GetMessageSettingsResult(response) {
-            jsonResult = JSON.parse(response);
-            if (jsonResult.result == "ERROR")
-            {
-                $("#divEditMsetValidationSummary").show();
-                $("#lstMsetValidationSummary").html("");
-                for (var i = 0; i < jsonResult.errorlist.length; i++) {
-                    $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
-                }
+    function GetMessageSettingsResult(response) {
+        jsonResult = JSON.parse(response);
+        if (jsonResult.result == "ERROR")
+        {
+            $("#divEditMsetValidationSummary").show();
+            $("#lstMsetValidationSummary").html("");
+            for (var i = 0; i < jsonResult.errorlist.length; i++) {
+                $("#lstMsetValidationSummary").append("<li>" + jsonResult.errorlist[i] + "</li>");
             }
-            else {
-                $.ajax(
-                    {
-                        url: '@Url.Action("GetMessageSettings", "Maintenance")' + '?msgCode=' + $("#MsgCode").val() + '&fileType=' + $("#FileType").val(),
-                        type: 'GET',
-                        success: function (data) {
-                            $("#MessageSettings .container .row").html("");
-                            $("#MessageSettings .container .row").html(data);
-                            $('#dvMessageSettings').modal('hide');
-                        }
-                    });
-            }
-        };
+        }
+        else {
+            $.ajax(
+                {
+                    url: '@Url.Action("GetMessageSettings", "Maintenance")' + '?msgCode=' + $("#MsgCode").val() + '&fileType=' + $("#FileType").val(),
+                    type: 'GET',
+                    success: function (data) {
+                        $("#MessageSettings .container .row").html("");
+                        $("#MessageSettings .container .row").html(data);
+                        $('#dvMessageSettings').modal('hide');
+                    }
+                });
+        }
+    };
 
 </script>
 

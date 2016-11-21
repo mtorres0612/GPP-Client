@@ -449,10 +449,7 @@
 
                                             <button type="button"
                                                     id="btnEmailDistList"
-                                                    class="btn btn-primary btn-md"
-                                                    data-toggle="modal"
-                                                    data-target="#dvEmailDistList"
-                                                    href="@Html.Raw(Url.Action("EditEmailDistributionList", "Maintenance", new { msgCode = @Model.MsgCode, erp = @Model.ERP }))">
+                                                    class="btn btn-primary btn-md">
                                                 Email Distribution List
                                             </button>
                                         </div>
@@ -616,6 +613,7 @@
         Initialize();
 
         function Initialize() {
+
             PopulatePrincipal($("#dvNewMessageAndSettings #ERP").val());
             $("#dvNewMessageAndSettings #SourceUserName, #dvNewMessageAndSettings #SourceAddress, #dvNewMessageAndSettings #SourcePassword, #dvNewMessageAndSettings #SourceFolder, #dvNewMessageAndSettings #SourceConfirmPassword").val("");
             $("#dvNewMessageAndSettings #DestinationUsername, #dvNewMessageAndSettings #DestinationAddress, #dvNewMessageAndSettings #DestinationPassword, #dvNewMessageAndSettings #DestinationFolder, #dvNewMessageAndSettings #DestinationConfirmPassword, #dvNewMessageAndSettings #DestinationPort").val("");
@@ -649,6 +647,20 @@
             $("#dvNewMessageAndSettings #DestinationPort").hide();
             $("#dvNewMessageAndSettings #btnEmailDistList").hide();
         }
+
+        $("#dvNewMessageAndSettings #btnEmailDistList").click(function () {
+
+            $.ajax({
+                url: '@Url.Action("ManageEmailDistributionList", "Maintenance")?msgCode=' + $("#dvNewMessageAndSettings #MsgCode").val() + '&erp=' + $("#dvNewMessageAndSettings #ERP").val(),
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#dvEmailDistList').modal('show');
+                    $("#dvEmailDistList").html("");
+                    $("#dvEmailDistList").html(result);
+                }
+            });
+        });
 
         $("#dvNewMessageAndSettings #ERP").on("change", function () {
             PopulatePrincipal($(this).val());
