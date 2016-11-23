@@ -20,16 +20,23 @@ namespace GPPClient.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {
-            List<User> userItem = oUserBL.GetAll(user.UserName, user.Password);
-
-            if (userItem.Count > 0)
+            if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.Password))
             {
-                FormsAuthentication.SetAuthCookie(user.UserName, true);
-                return RedirectToAction("Index", "Home");
+                ModelState.AddModelError("", "Login failed. Provide Username/Password.");
             }
             else
             {
-                ModelState.AddModelError("", "Login failed. Incorrect Username/Password.");
+                List<User> userItem = oUserBL.GetAll(user.UserName, user.Password);
+
+                if (userItem.Count > 0)
+                {
+                    FormsAuthentication.SetAuthCookie(user.UserName, true);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Login failed. Incorrect Username/Password.");
+                }
             }
 
             return View(user);
