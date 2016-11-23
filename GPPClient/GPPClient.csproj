@@ -187,6 +187,7 @@
     <Compile Include="Controllers\TradingPartnerController.cs" />
     <Compile Include="Controllers\TransmissionTypeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserMaintenanceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -207,6 +208,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\dashboard.css" />
     <Content Include="Content\images\animated-overlay.gif" />
+    <Content Include="Content\images\login\bg-photo.jpg" />
+    <Content Include="Content\images\login\brand-logo.png" />
     <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -237,6 +240,7 @@
     <Content Include="Scripts\Custom\EmailDistributionList.js" />
     <Content Include="Scripts\Custom\Maintenance.js" />
     <Content Include="Scripts\Custom\Module.js" />
+    <Content Include="Scripts\Custom\TradingPartner.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -339,6 +343,11 @@
     <Content Include="Views\Shared\_EmailDistributionList.cshtml" />
     <Content Include="Views\Maintenance\CreateMessageSettings.cshtml" />
     <Content Include="Views\Maintenance\EditMessage.cshtml" />
+    <Content Include="Views\UserMaintenance\Index.cshtml" />
+    <Content Include="Views\UserMaintenance\Create.cshtml" />
+    <Content Include="Views\UserMaintenance\Edit.cshtml" />
+    <Content Include="Views\UserMaintenance\Delete.cshtml" />
+    <Content Include="Views\UserMaintenance\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

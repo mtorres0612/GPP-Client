@@ -34,6 +34,7 @@ namespace GPPClientDAL
                 TradingPartner item     = new TradingPartner();
                 item.Id                 = Convert.ToInt64(dr["ID"].ToString());
                 item.TradingPartnerCode = dr["trdpCode"].ToString().Trim();
+                item.ERP                = dr["ERP"].ToString();
                 item.Principal          = dr["PRNCPL"].ToString();
                 item.Name               = dr["trdpName"].ToString();
                 item.ColuCode           = dr["coluCode"].ToString();
@@ -64,6 +65,7 @@ namespace GPPClientDAL
             SqlParameter[] sqlParams =	
 			{
 				new SqlParameter("@trdpCode", item.TradingPartnerCode),
+				new SqlParameter("@ERP", item.ERP),
 				new SqlParameter("@PRNCPL", item.Principal),
 				new SqlParameter("@trdpName", item.Name),
 				new SqlParameter("@coluCode", item.ColuCode),									
@@ -91,6 +93,7 @@ namespace GPPClientDAL
 			{
 				new SqlParameter("@Id", item.Id),
 				new SqlParameter("@trdpCode", item.TradingPartnerCode),
+				new SqlParameter("@ERP", item.ERP),
 				new SqlParameter("@PRNCPL", item.Principal),
 				new SqlParameter("@trdpName", item.Name),
 				new SqlParameter("@coluCode", item.ColuCode),									

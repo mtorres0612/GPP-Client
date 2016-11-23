@@ -192,6 +192,11 @@ namespace GPPClient.Controllers
             CountryBL oCountryBL                    = CountryBL.GetInstance();
             countryList                             = oCountryBL.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem { Text = x.Name, Value = x.Code });
             ViewBag.countryList                     = countryList;
+
+            IEnumerable<SelectListItem> erpList = new List<SelectListItem>();
+            ERPBL oERPBL                        = ERPBL.GetInstance();
+            erpList                             = oERPBL.GetAll().OrderBy(x => x.Erp).Select(x => new SelectListItem { Text = x.Erp, Value = x.Erp });
+            ViewBag.erpList                     = erpList;
         }
 
         private bool IsUserNameExist(string userName, string method, string tradingPartnerCode)
@@ -231,12 +236,14 @@ namespace GPPClient.Controllers
         MessageSettingsBL oMessageSettingsBL         = new MessageSettingsBL();
         FileTransferSettingBL oFileTransferSettingBL = new FileTransferSettingBL();
 
-        public ActionResult GetMessagesPerTradingPartner(string trdpCode, string coluCode, int page = 1, int pageSize = 10)
+        public ActionResult GetMessagesPerTradingPartner(string erp, string principal, string trdpCode, string coluCode, int page = 1, int pageSize = 10)
         {
             List<Messages> list    = new List<Messages>();
             list                   = oMessagesBL.GetAllMessages(trdpCode).OrderBy(x => x.MsgCode).ToList();
             ViewBag.trdpCode       = trdpCode;
             ViewBag.coluCode       = coluCode;
+            ViewBag.erp            = erp;
+            ViewBag.principal      = principal;
             return PartialView("_Messages", list.ToPagedList(page, pageSize));
         }
 
@@ -247,6 +254,8 @@ namespace GPPClient.Controllers
             item                = oTradingPartnerBL.GetAll().OrderBy(x => x.TradingPartnerCode).FirstOrDefault();
             list                = oMessagesBL.GetAllMessages(item.TradingPartnerCode).OrderBy(x => x.MsgCode).ToList();
             ViewBag.trdpCode    = item.TradingPartnerCode;
+            ViewBag.erp         = item.ERP;
+            ViewBag.principal   = item.Principal;
             ViewBag.coluCode    = item.ColuCode;
 
             return PartialView("_Messages", list.ToPagedList(1, 10));
@@ -265,7 +274,7 @@ namespace GPPClient.Controllers
         }
 
 
-        public ActionResult CreateMessage(string trdpCode, string coluCode)
+        public ActionResult CreateMessage(string trdpCode, string coluCode, string erp, string principal)
         {
             GPPClientModel.CustomModel custom    = new GPPClientModel.CustomModel();
             custom.Messages                      = new Messages();
@@ -277,12 +286,14 @@ namespace GPPClient.Controllers
             ViewBag.isNew                        = true;
             ViewBag.customModel                  = custom;
             ViewBag.Messages                     = custom.Messages;
+            ViewBag.erp                          = erp;
+            ViewBag.principal                    = principal;
             PopulateMessageLOV();
             return View(custom);
         }
 
         [HttpPost]
-        public ActionResult CreateMessage(CustomModel item, string save, bool isNew)
+        public ActionResult CreateMessage(CustomModel item, string save, bool isNew, string erp, string principal)
         {
             int result = 0;
 
@@ -321,10 +332,10 @@ namespace GPPClient.Controllers
                 }
             }
 
-            return Json(new { result = "SUCCESS", msgCode = item.Messages.MsgCode, message = save, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "SUCCESS", msgCode = item.Messages.MsgCode, message = save, strErp = erp, strPrincipal = principal, strTrdpCode = item.Messages.TradingPartnercode, strColuCode = item.Messages.ColuCode, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditMessage(string trdpCode, string msgCode)
+        public ActionResult EditMessage(string trdpCode, string msgCode, string erp, string principal)
         {
             Messages item                             = new Messages();
             item                                      = oMessagesBL.GetAllMessages(trdpCode, msgCode).FirstOrDefault();
@@ -333,6 +344,8 @@ namespace GPPClient.Controllers
             ViewBag.msgCode                           = msgCode;
             ViewBag.fileType                          = item.FileType;
             ViewBag.isNew                             = false;
+            ViewBag.erp                               = erp;
+            ViewBag.principal                         = principal;
 
             CustomModel custModel = new CustomModel();
 
@@ -350,7 +363,7 @@ namespace GPPClient.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditMessage(CustomModel item, string save)
+        public ActionResult EditMessage(CustomModel item, string save, string erp, string principal)
         {
             int result = 0;
             if (save == "Update Message")
@@ -388,13 +401,16 @@ namespace GPPClient.Controllers
                 }
             }
 
-            return Json(new { result = "SUCCESS", message = save, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "SUCCESS", message = save, strErp = erp, strPrincipal = principal, strTrdpCode = item.Messages.TradingPartnercode, strColuCode = item.Messages.ColuCode, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult DeleteMessage(string trdpCode, string msgCode)
+        public ActionResult DeleteMessage(string trdpCode, string msgCode, string coluCode, string erp, string principal)
         {
-            Messages item = new Messages();
-            item = oMessagesBL.GetAllMessages(trdpCode, msgCode).FirstOrDefault();
+            Messages item     = new Messages();
+            item              = oMessagesBL.GetAllMessages(trdpCode, msgCode).FirstOrDefault();
+            ViewBag.erp       = erp;
+            ViewBag.principal = principal;
+            ViewBag.coluCode  = coluCode;
 
             if (item == null)
             {
@@ -406,27 +422,27 @@ namespace GPPClient.Controllers
 
         [HttpPost]
         [ActionName("DeleteMessage")]
-        public ActionResult DeleteConfirmedMessage(Messages item)
+        public ActionResult DeleteConfirmedMessage(Messages item, string coluCode, string erp, string principal)
         {
-            int result = 0;
-
+            int result                                = 0;
+            string trdpCode                           = string.Empty;
             List<MessageSettings> messageSettingsList = new List<MessageSettings>();
             messageSettingsList                       = oMessageSettingsBL.GetAll(item.MsgCode).ToList();
+            trdpCode                                  = item.TradingPartnercode;
 
             foreach (var mSetItem in messageSettingsList)
             {
                 oMessageSettingsBL.Delete(mSetItem.MsetID);
-
             }
 
-            result = oMessagesBL.Delete(item.MsgCode, item.TradingPartnercode);
+            result   = oMessagesBL.Delete(item.MsgCode, item.TradingPartnercode);
 
             if (result != 1)
             {
                 return Json(new { result = "ERROR", message = "AN ERROR OCCURED. PLEASE TRY AGAIN LATER.", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = "SUCCESS", message = "SUCCESSFUL TRANSACTION", strErp = erp, strPrincipal = principal, strTrdpCode = trdpCode, strColuCode = coluCode, errorlist = new List<ModelError>() }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetMessageSettings(string msgCode, string fileType)

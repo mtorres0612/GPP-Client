@@ -3,18 +3,18 @@
 }
 
 body {
-    background: #eee !important;
+    padding: 15px;
 }
 
 .wrapper {
-    margin-top: 80px;
-    margin-bottom: 80px;
+    background-image: url('images/login/bg-photo.jpg');
+    padding: 40px 50px 150px 50px;
 }
 
 .form-signin {
-    max-width: 380px;
-    padding: 15px 35px 45px;
-    margin: 0 auto;
+    max-width: 390px;
+    padding: 30px 35px 130px 35px;
+    margin-left: 65%;
     background-color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -22,7 +22,12 @@ body {
     .form-signin .form-signin-heading,
     .form-signin .checkbox {
         font-family: Calibri;
-        margin-bottom: 30px;
+        margin-bottom: 50px;
+        font-size: 20px;
+    }
+
+    .form-signin .form-signin-heading {
+        text-align: center;
     }
 
     .form-signin .checkbox {
@@ -54,3 +59,8 @@ body {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
+
+.login-error ul {
+    list-style: none;
+    margin-top:20px;
+}

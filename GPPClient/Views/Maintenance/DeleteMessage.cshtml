@@ -118,6 +118,9 @@
             <div class="modal-footer">
                 <input class="btn btn-danger btn-md" type="submit" id="btnDelete" name="Save" value="Delete message" />
                 <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
+                @Html.Hidden("erp", (string) ViewBag.erp)
+                @Html.Hidden("principal", (string) ViewBag.principal)
+                @Html.Hidden("coluCode", (string) ViewBag.coluCode)
             </div>
         </div>
     </div>
@@ -144,7 +147,7 @@
             $('.modal-backdrop').remove();
 
             $.ajax({
-                url: '@Url.Action("GetMessagesPerTradingPartner", "Maintenance", new { trdpCode = Model.TradingPartnercode })',
+                url: '/Maintenance/GetMessagesPerTradingPartner?erp=' + jsonResult.strErp + '&principal=' + jsonResult.strPrincipal + '&trdpCode=' + jsonResult.strTrdpCode + '&coluCode=' + jsonResult.strColuCode,
                 type: 'GET',
                 cache: false,
                 success: function (result) {

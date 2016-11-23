@@ -403,8 +403,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input class="btn btn-success btn-md" type="submit" id="btnUpdate" name="save" value="Update Message" />
+                <input class="btn btn-primary btn-md" type="submit" id="btnUpdate" name="save" value="Update Message" />
                 <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
+                @Html.Hidden("erp", (string)ViewBag.erp)
+                @Html.Hidden("principal", (string)ViewBag.principal)
             </div>
         </div>
     </div>
@@ -450,7 +452,7 @@
                 $('.modal-backdrop').remove();
 
                 $.ajax({
-                    url: '@Url.Action("GetMessagesPerTradingPartner", "Maintenance", new { trdpCode = Model.Messages.TradingPartnercode })',
+                    url: '/Maintenance/GetMessagesPerTradingPartner?erp=' + jsonResult.strErp + '&principal=' + jsonResult.strPrincipal + '&trdpCode=' + jsonResult.strTrdpCode + '&coluCode=' + jsonResult.strColuCode,
                     type: 'GET',
                     cache: false,
                     success: function (result) {
@@ -467,6 +469,9 @@
                         $('#dvNewMessageAndSettings').modal('show');
                         $("#dvNewMessageAndSettings").html("");
                         $("#dvNewMessageAndSettings").html(result);
+
+                        $("#dvNewMessageAndSettings #ERP").val(jsonResult.strErp);
+                        $("#dvNewMessageAndSettings #PRNCPL").val(jsonResult.strPrincipal);
                     }
                 });
             }

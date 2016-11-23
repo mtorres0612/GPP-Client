@@ -37,17 +37,23 @@ namespace GPPClientBL
 
         public int Insert(User item)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            result     = oUserDAL.Insert(item);
+            return result;
         }
 
         public int Update(User item)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            result     = oUserDAL.Update(item);
+            return result;
         }
 
         public int Delete(object id)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            result     = oUserDAL.Delete(id);
+            return result;
         }
     }
 }

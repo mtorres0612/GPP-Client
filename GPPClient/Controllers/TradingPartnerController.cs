@@ -39,7 +39,7 @@ namespace GPPClient.Controllers
         public ActionResult Create()
         {
             PopulateLOV();
-            return View();
+            return View("~/Views/Maintenance/CreateTradingPartner.cshtml");
         }
 
         // POST: TradingPartner/Create
@@ -105,7 +105,8 @@ namespace GPPClient.Controllers
             item.Password = Utility.Decrypt(item.Password);
             
             PopulateLOV();
-            return View(item);
+            return View("~/Views/Maintenance/EditTradingPartner.cshtml", item);
+
         }
 
         // POST: TradingPartner/Edit/5
@@ -191,9 +192,14 @@ namespace GPPClient.Controllers
         private void PopulateLOV()
         {
             IEnumerable<SelectListItem> countryList = new List<SelectListItem>();
-            CountryBL oCountryBL = CountryBL.GetInstance();
-            countryList = oCountryBL.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem { Text = x.Name, Value = x.Code });
-            ViewBag.countryList = countryList;
+            CountryBL oCountryBL                    = CountryBL.GetInstance();
+            countryList                             = oCountryBL.GetAll().OrderBy(x => x.Name).Select(x => new SelectListItem { Text = x.Name, Value = x.Code });
+            ViewBag.countryList                     = countryList;
+
+            IEnumerable<SelectListItem> erpList = new List<SelectListItem>();
+            ERPBL oERPBL                        = ERPBL.GetInstance();
+            erpList                             = oERPBL.GetAll().OrderBy(x => x.Erp).Select(x => new SelectListItem { Text = x.Erp, Value = x.Erp });
+            ViewBag.erpList                     = erpList;
         }
 
         private bool IsUserNameExist(string userName, string method, string tradingPartnerCode)

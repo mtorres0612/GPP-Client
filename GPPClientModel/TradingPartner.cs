@@ -16,9 +16,10 @@ namespace GPPClientModel
         private string _user;
         private string _userName;
         private string _password;
-        private int _xmlIdentityNode;
+        private int? _xmlIdentityNode;
         private int _xmlEncodingType;
         private bool _indented;
+        private string _erp;
 
         public Int64 Id { get; set; }
 
@@ -30,12 +31,20 @@ namespace GPPClientModel
             set { _tradingPartnerCode = value; }
         }
 
+        [Display(Name = "ERP")]
+        [Required]
+        public string ERP
+        {
+            get { return _erp; }
+            set { _erp = value; }
+        }
+
         [Display(Name = "Principal Code")]
         [Required]
         public string Principal
         {
             get { return _principal; }
-            set { _principal = value; }
+            set { _principal = CleanString(value); }
         }
 
         [Display(Name = "Trading Partner Name")]
@@ -72,10 +81,10 @@ namespace GPPClientModel
         }
 
         [Display(Name = "Xml Identity Node")]
-        public int XmlIdentityNode
+        public int? XmlIdentityNode
         {
             get { return _xmlIdentityNode; }
-            set { _xmlIdentityNode = value; }
+            set { _xmlIdentityNode = _xmlIdentityNode.HasValue ? value : 0; }
         }
 
         [Display(Name = "Xml Indentation")]

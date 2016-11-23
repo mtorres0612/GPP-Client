@@ -89,7 +89,8 @@
                                             @Html.LabelFor(model => model.ERP, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                         </div>
                                         <div class="col-xs-8">
-                                            @Html.DropDownListFor(model => model.ERP, new SelectList(ViewBag.erpList, "Value", "Text"), "Select ERP", new { @class = "form-control" })
+                                            @*@Html.DropDownListFor(model => model.ERP, new SelectList(ViewBag.erpList, "Value", "Text"), "Select ERP", new { @class = "form-control" })*@
+                                            @Html.EditorFor(model => model.ERP, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
                                             @Html.ValidationMessageFor(model => model.ERP, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -100,7 +101,8 @@
                                             @Html.LabelFor(model => model.PRNCPL, htmlAttributes: new { @class = "control-label col-md-2 modal-label" })
                                         </div>
                                         <div class="col-xs-10">
-                                            @Html.DropDownList("PRNCPL", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text", @Model.PRNCPL), "Select Principal", new { @class = "form-control" })
+                                            @*@Html.DropDownList("PRNCPL", new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text", @Model.PRNCPL), "Select Principal", new { @class = "form-control" })*@
+                                            @Html.EditorFor(model => model.PRNCPL, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
                                             @Html.ValidationMessageFor(model => model.PRNCPL, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -598,7 +600,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input class="btn btn-success btn-md" type="submit" id="btnSave" name="Save" value="Save Message Settings" />
+                <input class="btn btn-primary btn-md" type="submit" id="btnSave" name="Save" value="Save Message Settings" />
                 <button type="button" class="btn btn-default btn-md" data-dismiss="modal">Close</button>
 
                 <span>
@@ -623,7 +625,7 @@
         Initialize();
 
         function Initialize() {
-            PopulatePrincipal($("#ERP").val(), '@Model.PRNCPL');
+            //PopulatePrincipal($("#ERP").val(), '@Model.PRNCPL');
 
             $("#SourceUserName, #SourceAddress, #SourcePassword, #SourceFolder, #SourceConfirmPassword").val("");
             $("#DestinationUsername, #DestinationAddress, #DestinationPassword, #DestinationFolder, #DestinationConfirmPassword, #DestinationPort").val("");
