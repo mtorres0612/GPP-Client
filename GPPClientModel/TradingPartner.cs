@@ -58,7 +58,7 @@ namespace GPPClientModel
         public string ColuCode
         {
             get { return _coluCode; }
-            set { _coluCode = value; }
+            set { _coluCode = CleanString(value); }
         }
 
         public string User
@@ -71,7 +71,7 @@ namespace GPPClientModel
         public string UserName
         {
             get { return _userName; }
-            set { _userName = value; }
+            set { _userName = CleanString(value); }
         }
 
         public string Password

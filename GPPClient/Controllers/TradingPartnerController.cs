@@ -49,34 +49,7 @@ namespace GPPClient.Controllers
             int result = 0;
             if (ModelState.IsValid)
             {
-                if (IsUserNameExist(item.UserName, "CREATE", item.TradingPartnerCode))
-                {
-                    PopulateLOV();
-                    ModelState.AddModelError("UserName", "UserName already exist, Please choose another Username.");
-                    return View();
-                }
-                else if (!Utility.CheckForStrongPassword(item.Password))
-                {
-                    if (!string.IsNullOrEmpty(item.UserName))
-                    {
-                        StringBuilder _sb = new StringBuilder();
-                        _sb.Append("Password does not match the correct format.<br />");
-                        _sb.Append("Passwords will contain at least (1) upper case letter.<br />");
-                        _sb.Append("Passwords will contain at least (1) lower case letter.<br />");
-                        _sb.Append("Passwords will contain at least (1) number or special character.<br />");
-                        _sb.Append("Passwords will contain at least (8) characters in length.<br />");
-                        _sb.Append("Password maximum length should not be arbitrarily limited.<br />");
-
-                        PopulateLOV();
-                        ModelState.AddModelError("Password", _sb.ToString());
-                        return View();
-                    }
-                }
-                else
-                {
-                    item.Password = Utility.Encrypt(item.Password);
-                    result = oTradingPartnerBL.Insert(item);
-                }
+                result = oTradingPartnerBL.Insert(item);
             }
             else
             {
@@ -102,8 +75,6 @@ namespace GPPClient.Controllers
                 return HttpNotFound();
             }
 
-            item.Password = Utility.Decrypt(item.Password);
-            
             PopulateLOV();
             return View("~/Views/Maintenance/EditTradingPartner.cshtml", item);
 
@@ -116,34 +87,7 @@ namespace GPPClient.Controllers
             int result = 0;
             if (ModelState.IsValid)
             {
-                if (IsUserNameExist(item.UserName, "EDIT", item.TradingPartnerCode))
-                {
-                    PopulateLOV();
-                    ModelState.AddModelError("UserName", "UserName is already in use.");
-                    return View(item);
-                }
-                else if (!Utility.CheckForStrongPassword(item.Password))
-                {
-                    if (!string.IsNullOrEmpty(item.UserName))
-                    {
-                        StringBuilder _sb = new StringBuilder();
-                        _sb.Append("Password does not match the correct format.<br />");
-                        _sb.Append("Passwords will contain at least (1) upper case letter.<br />");
-                        _sb.Append("Passwords will contain at least (1) lower case letter.<br />");
-                        _sb.Append("Passwords will contain at least (1) number or special character.<br />");
-                        _sb.Append("Passwords will contain at least (8) characters in length.<br />");
-                        _sb.Append("Password maximum length should not be arbitrarily limited.<br />");
-
-                        PopulateLOV();
-                        ModelState.AddModelError("Password", _sb.ToString());
-                        return View(item);
-                    }
-                }
-                else
-                {
-                    item.Password = Utility.Encrypt(item.Password);
-                    result = oTradingPartnerBL.Update(item);
-                }
+                result = oTradingPartnerBL.Update(item);
             }
             else
             {
