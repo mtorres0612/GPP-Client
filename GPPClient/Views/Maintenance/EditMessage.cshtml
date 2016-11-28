@@ -452,7 +452,7 @@
                 $('.modal-backdrop').remove();
 
                 $.ajax({
-                    url: '/Maintenance/GetMessagesPerTradingPartner?erp=' + jsonResult.strErp + '&principal=' + jsonResult.strPrincipal + '&trdpCode=' + jsonResult.strTrdpCode + '&coluCode=' + jsonResult.strColuCode,
+                    url: '/Maintenance/GetMessagesPerTradingPartner?erp=' + jsonResult.strErp + '&principal=' + jsonResult.strPrincipal + '&trdpCode=' + encodeURIComponent(jsonResult.strTrdpCode) + '&coluCode=' + jsonResult.strColuCode,
                     type: 'GET',
                     cache: false,
                     success: function (result) {
